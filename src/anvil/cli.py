@@ -9,7 +9,97 @@ from rich.console import Console
 console = Console()
 
 
-@click.group()
+class AnvilGroup(click.Group):
+    """Custom Click group with colored help output."""
+
+    def get_help(self, ctx):
+        """Override to provide colored help output."""
+        from rich.console import Console
+        from rich.panel import Panel
+        from rich.text import Text
+        from rich.table import Table
+
+        console = Console()
+
+        # Get the standard help text
+        help_text = super().get_help(ctx)
+
+        # Create a colored help display
+        console.print()  # Add spacing
+
+        # Title
+        title = Text("🔨 Anvil: Python Toolchain Orchestrator", style="bold cyan")
+        console.print(Panel(title, border_style="cyan"))
+
+        # Description
+        desc = Text(
+            "Scaffold, configure, and orchestrate Python projects with consistent tooling.\n"
+            "Zero manual Makefiles, zero repetitive setup.",
+            style="white",
+        )
+        console.print(desc)
+        console.print()
+
+        # Commands table
+        table = Table(title="[bold green]Available Commands[/bold green]", box=None)
+        table.add_column("Command", style="blue", no_wrap=True)
+        table.add_column("Description", style="white")
+
+        commands = [
+            ("new", "Scaffold a new Python project"),
+            ("dev", "Run project in development mode with watch"),
+            ("run", "Run the canonical executable for the project"),
+            ("fmt", "Format code"),
+            ("lint", "Lint code"),
+            ("check", "Run comprehensive code quality checks"),
+            ("test", "Run tests"),
+            ("build", "Build the project"),
+            ("release", "Release the project"),
+        ]
+
+        for cmd_name, cmd_desc in commands:
+            table.add_row(f"[bold blue]{cmd_name}[/bold blue]", cmd_desc)
+
+        console.print(table)
+        console.print()
+
+        # Usage examples
+        examples = Text("Examples:", style="bold yellow")
+        console.print(examples)
+
+        examples_table = Table(box=None, show_header=False)
+        examples_table.add_column("", style="cyan")
+        examples_table.add_column("", style="white")
+
+        examples_data = [
+            ("anvil new mylib", "Create a new library project"),
+            (
+                "anvil new myapi --profile api --template fastapi",
+                "Create a FastAPI project",
+            ),
+            ("anvil dev", "Start development mode with auto-reload"),
+            ("anvil check", "Run all quality checks"),
+            ("anvil build", "Build wheel and source distributions"),
+        ]
+
+        for cmd, desc in examples_data:
+            examples_table.add_row(f"  {cmd}", f"# {desc}")
+
+        console.print(examples_table)
+        console.print()
+
+        # Footer
+        footer = Text(
+            "Run 'anvil COMMAND --help' for detailed help on a specific command.\n"
+            "Version: 0.1.0",
+            style="white",
+        )
+        console.print(footer)
+
+        return ""  # Suppress default help output
+
+
+@click.group(cls=AnvilGroup)
 @click.version_option(version="0.1.0")
 def main() -> None:
     """Anvil: Python toolchain orchestrator.
