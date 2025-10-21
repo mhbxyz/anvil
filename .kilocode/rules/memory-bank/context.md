@@ -8,7 +8,11 @@ Phase 1 MVP implementation in progress. Basic project structure established with
 - Project structure initialized with uv: src/anvil/ package, pyproject.toml configured, dependencies installed
 - Basic CLI framework implemented with all core commands (new, dev, run, fmt, lint, test, build) as placeholders
 - Comprehensive test suite created with 9 tests covering CLI functionality
-- All tests passing, CLI help working correctly
+- Fixed memory leak in test_cli.py test_new_command (missing cleanup of created project files)
+- Updated test assertions to match actual CLI behavior (missing dependencies, implemented features)
+- Added .gitignore entries for .idea/ and test artifacts (src/test*/, packages/)
+- Added cleanup in test_e2e.py to prevent accumulation of test scaffolded projects
+- All tests passing without memory issues or assertion failures
 
 ## Next Steps
 - Add tool detection and fallback behavior for ruff, pytest, etc.
