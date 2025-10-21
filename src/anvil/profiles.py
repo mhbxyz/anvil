@@ -39,7 +39,7 @@ class Profile:
         from .pyproject import PyProjectGenerator
 
         generator = PyProjectGenerator(config)
-        pyproject_path = Path("pyproject.toml")
+        pyproject_path = config.project_root / "pyproject.toml"
         generator.write_to_file(pyproject_path)
 
 
@@ -54,7 +54,7 @@ class LibProfile(Profile):
         package_name = config.get("project.package", project_name.replace("-", "_"))
 
         # Create src/package structure
-        src_dir = Path("src")
+        src_dir = config.project_root / "src"
         package_dir = src_dir / package_name
         package_dir.mkdir(parents=True, exist_ok=True)
 
@@ -64,7 +64,7 @@ class LibProfile(Profile):
         )
 
         # Create tests directory
-        tests_dir = Path("tests")
+        tests_dir = config.project_root / "tests"
         tests_dir.mkdir(exist_ok=True)
         (tests_dir / "__init__.py").write_text("")
         (tests_dir / "test_sanity.py").write_text(
@@ -83,7 +83,7 @@ class CliProfile(Profile):
         package_name = config.get("project.package", project_name.replace("-", "_"))
 
         # Create src/package structure
-        src_dir = Path("src")
+        src_dir = config.project_root / "src"
         package_dir = src_dir / package_name
         package_dir.mkdir(parents=True, exist_ok=True)
 
@@ -108,7 +108,7 @@ class ApiProfile(Profile):
         template = config.get("api.template", "fastapi")
 
         # Create src/package structure
-        src_dir = Path("src")
+        src_dir = config.project_root / "src"
         package_dir = src_dir / package_name
         package_dir.mkdir(parents=True, exist_ok=True)
 
@@ -195,7 +195,7 @@ class ServiceProfile(Profile):
         package_name = config.get("project.package", project_name.replace("-", "_"))
 
         # Create src/package structure
-        src_dir = Path("src")
+        src_dir = config.project_root / "src"
         package_dir = src_dir / package_name
         package_dir.mkdir(parents=True, exist_ok=True)
 
@@ -217,7 +217,7 @@ class MonorepoProfile(Profile):
     def scaffold(self, project_name: str, config: Config) -> None:
         """Scaffold monorepo structure."""
         # Create packages directory
-        packages_dir = Path("packages")
+        packages_dir = config.project_root / "packages"
         packages_dir.mkdir(exist_ok=True)
 
         # Create basic workspace structure
