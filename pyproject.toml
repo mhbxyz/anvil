@@ -1,14 +1,14 @@
 [project]
 name = "anvil"
 version = "0.1.0"
-description = "Python toolchain orchestrator for consistent project setup"
+description = "Toolchain orchestrator for fast and clean project setup"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    {name = "Anvil Team"},
+    {name = "Manoah BERNIER"},
 ]
 maintainers = [
-    {name = "Anvil Team"},
+    {name = "Manoah BERNIER"},
 ]
 keywords = ["cli", "toolchain", "python", "development"]
 classifiers = [
@@ -30,10 +30,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/anvil"
-Repository = "https://github.com/your-org/anvil"
-Issues = "https://github.com/your-org/anvil/issues"
-Changelog = "https://github.com/your-org/anvil/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/mhbxyz/anvil"
+Repository = "https://github.com/mhbxyz/anvil"
+Issues = "https://github.com/mhbxyz/anvil/issues"
+Changelog = "https://github.com/mhbxyz/anvil/blob/main/CHANGELOG.md"
 
 [project.scripts]
 anvil = "anvil.cli:main"
