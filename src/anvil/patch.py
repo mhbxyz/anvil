@@ -62,6 +62,212 @@ class Patch(ABC):
         self.description = description
         self.operations: List[PatchOperation] = []
 
+    def _read_structured_file(self, file_path: Path, file_format: FileFormat) -> Any:
+        """Read and parse a structured file."""
+        content = file_path.read_text()
+
+        if file_format == FileFormat.TOML:
+            try:
+                import tomllib
+
+                return tomllib.loads(content)
+            except ImportError:
+                import tomli as tomllib
+
+                return tomllib.loads(content)
+        elif file_format == FileFormat.JSON:
+            import json
+
+            return json.loads(content)
+        elif file_format == FileFormat.YAML:
+            import yaml
+
+            return yaml.safe_load(content)
+        else:
+            raise ValueError(f"Unsupported file format: {file_format}")
+
+    def _write_structured_file(
+        self, file_path: Path, data: Any, file_format: FileFormat
+    ) -> None:
+        """Write data to a structured file."""
+        if file_format == FileFormat.TOML:
+            # For TOML, we'd need a TOML writer that preserves comments
+            # This is a simplified version
+            try:
+                import tomli_w
+
+                tomli_w.dump(data, file_path.open("wb"))
+            except ImportError:
+                # Fallback to basic TOML writing
+                self._write_basic_toml(file_path, data)
+        elif file_format == FileFormat.JSON:
+            import json
+
+            file_path.write_text(json.dumps(data, indent=2))
+        elif file_format == FileFormat.YAML:
+            import yaml
+
+            with open(file_path, "w") as f:
+                yaml.dump(data, f, default_flow_style=False)
+        else:
+            raise ValueError(f"Unsupported file format: {file_format}")
+
+    def _merge_structured_file(
+        self, file_path: Path, updates: Any, file_format: FileFormat
+    ) -> Any:
+        """Merge updates into an existing structured file, preserving comments where possible."""
+        if not file_path.exists():
+            return updates
+
+        current_data = self._read_structured_file(file_path, file_format)
+
+        if file_format == FileFormat.TOML:
+            return self._merge_toml_with_comments(file_path, current_data, updates)
+        elif file_format == FileFormat.YAML:
+            return self._merge_yaml_with_comments(file_path, current_data, updates)
+        elif file_format == FileFormat.JSON:
+            return self._merge_data(current_data, updates)
+        else:
+            raise ValueError(f"Unsupported file format for merging: {file_format}")
+
+    def _merge_toml_with_comments(
+        self, file_path: Path, current_data: Any, updates: Any
+    ) -> Any:
+        """Merge TOML data while attempting to preserve comments."""
+        try:
+            # Try to use tomlkit for comment preservation
+            import tomlkit
+
+            # Read the original file content
+            original_content = file_path.read_text()
+
+            # Parse with tomlkit to preserve comments and formatting
+            doc = tomlkit.parse(original_content)
+
+            # Apply updates while preserving structure
+            self._apply_updates_to_tomlkit_doc(doc, updates)
+
+            # Write back with preserved comments
+            file_path.write_text(doc.as_string())
+            return doc.unwrap()
+
+        except ImportError:
+            # Fallback to simple merge if tomlkit not available
+            return self._merge_data(current_data, updates)
+        except Exception:
+            # Fallback on any error
+            return self._merge_data(current_data, updates)
+
+    def _merge_yaml_with_comments(
+        self, file_path: Path, current_data: Any, updates: Any
+    ) -> Any:
+        """Merge YAML data while attempting to preserve comments."""
+        try:
+            # Try to use ruamel.yaml for comment preservation
+            from ruamel.yaml import YAML
+
+            yaml = YAML()
+            yaml.preserve_quotes = True
+            yaml.indent(mapping=2, sequence=4, offset=2)
+
+            # Load the existing YAML with comment preservation
+            with open(file_path, "r") as f:
+                doc = yaml.load(f)
+
+            # Apply updates while preserving comments
+            self._apply_updates_to_ruamel_doc(doc, updates)
+
+            # Write back with preserved comments
+            with open(file_path, "w") as f:
+                yaml.dump(doc, f)
+
+            return doc
+
+        except ImportError:
+            # Fallback to simple merge if ruamel.yaml not available
+            return self._merge_data(current_data, updates)
+        except Exception:
+            # Fallback on any error
+            return self._merge_data(current_data, updates)
+
+    def _apply_updates_to_tomlkit_doc(self, doc: Any, updates: Any) -> None:
+        """Apply updates to a tomlkit document."""
+        if not isinstance(updates, dict):
+            return
+
+        for key, value in updates.items():
+            if isinstance(value, dict):
+                if key not in doc:
+                    doc[key] = tomlkit.table()
+                elif not isinstance(doc[key], tomlkit.items.Table):
+                    doc[key] = tomlkit.table()
+                self._apply_updates_to_tomlkit_doc(doc[key], value)
+            else:
+                doc[key] = value
+
+    def _apply_updates_to_ruamel_doc(self, doc: Any, updates: Any) -> None:
+        """Apply updates to a ruamel.yaml document."""
+        if not isinstance(updates, dict):
+            return
+
+        if not isinstance(doc, dict):
+            # If doc is not a dict, we can't merge updates
+            return
+
+        for key, value in updates.items():
+            if isinstance(value, dict):
+                if key not in doc:
+                    doc[key] = {}
+                elif not isinstance(doc[key], dict):
+                    doc[key] = {}
+                self._apply_updates_to_ruamel_doc(doc[key], value)
+            else:
+                doc[key] = value
+
+    def _merge_data(self, current: Any, updates: Any) -> Any:
+        """Merge update data into current data."""
+        if isinstance(current, dict) and isinstance(updates, dict):
+            merged = current.copy()
+            for key, value in updates.items():
+                if (
+                    key in merged
+                    and isinstance(merged[key], dict)
+                    and isinstance(value, dict)
+                ):
+                    merged[key] = self._merge_data(merged[key], value)
+                else:
+                    merged[key] = value
+            return merged
+        else:
+            # For non-dict types, updates replace current
+            return updates
+
+    def _write_basic_toml(self, file_path: Path, data: Any) -> None:
+        """Basic TOML writer fallback."""
+        content = ""
+        for key, value in data.items():
+            if isinstance(value, dict):
+                content += f"\n[{key}]\n"
+                for sub_key, sub_value in value.items():
+                    if isinstance(sub_value, str):
+                        content += f'{sub_key} = "{sub_value}"\n'
+                    elif isinstance(sub_value, bool):
+                        content += f"{sub_key} = {str(sub_value).lower()}\n"
+                    elif isinstance(sub_value, list):
+                        content += f"{sub_key} = {sub_value}\n"
+                    else:
+                        content += f"{sub_key} = {sub_value}\n"
+            else:
+                if isinstance(value, str):
+                    content += f'{key} = "{value}"\n'
+                elif isinstance(value, bool):
+                    content += f"{key} = {str(value).lower()}\n"
+                elif isinstance(value, list):
+                    content += f"{key} = {value}\n"
+                else:
+                    content += f"{key} = {value}\n"
+        file_path.write_text(content)
+
     @abstractmethod
     def generate_operations(
         self, config: "Config", project_root: Path
@@ -186,14 +392,11 @@ class Patch(ABC):
             if operation.file_format == FileFormat.TEXT:
                 target_path.write_text(operation.data or "")
             else:
-                # For structured formats, merge the data
-                current_data = self._read_structured_file(
-                    target_path, operation.file_format
+                # For structured formats, merge the data with comment preservation
+                self._merge_structured_file(
+                    target_path, operation.data, operation.file_format
                 )
-                merged_data = self._merge_data(current_data, operation.data)
-                self._write_structured_file(
-                    target_path, merged_data, operation.file_format
-                )
+                # Note: _merge_structured_file handles writing the file
 
         return PatchResult(
             operation=operation, success=True, message=f"Updated file: {target_path}"
@@ -515,6 +718,123 @@ class PatchEngine:
         else:
             raise ValueError(f"Unsupported file format: {file_format}")
 
+    def _merge_structured_file(
+        self, file_path: Path, updates: Any, file_format: FileFormat
+    ) -> Any:
+        """Merge updates into an existing structured file, preserving comments where possible."""
+        if not file_path.exists():
+            # If file doesn't exist, just write the updates
+            self._write_structured_file(file_path, updates, file_format)
+            return updates
+
+        current_data = self._read_structured_file(file_path, file_format)
+
+        if file_format == FileFormat.TOML:
+            return self._merge_toml_with_comments(file_path, current_data, updates)
+        elif file_format == FileFormat.YAML:
+            return self._merge_yaml_with_comments(file_path, current_data, updates)
+        elif file_format == FileFormat.JSON:
+            # For JSON, we need to merge and write back
+            merged_data = self._merge_data(current_data, updates)
+            self._write_structured_file(file_path, merged_data, file_format)
+            return merged_data
+        else:
+            raise ValueError(f"Unsupported file format for merging: {file_format}")
+
+    def _merge_toml_with_comments(
+        self, file_path: Path, current_data: Any, updates: Any
+    ) -> Any:
+        """Merge TOML data while attempting to preserve comments."""
+        try:
+            # Try to use tomlkit for comment preservation
+            import tomlkit
+
+            # Read the original file content
+            original_content = file_path.read_text()
+
+            # Parse with tomlkit to preserve comments and formatting
+            doc = tomlkit.parse(original_content)
+
+            # Apply updates while preserving structure
+            self._apply_updates_to_tomlkit_doc(doc, updates)
+
+            # Write back with preserved comments
+            file_path.write_text(doc.as_string())
+            return doc.unwrap()
+
+        except ImportError:
+            # Fallback to simple merge if tomlkit not available
+            return self._merge_data(current_data, updates)
+        except Exception:
+            # Fallback on any error
+            return self._merge_data(current_data, updates)
+
+    def _merge_yaml_with_comments(
+        self, file_path: Path, current_data: Any, updates: Any
+    ) -> Any:
+        """Merge YAML data while attempting to preserve comments."""
+        try:
+            # Try to use ruamel.yaml for comment preservation
+            from ruamel.yaml import YAML
+
+            yaml = YAML()
+            yaml.preserve_quotes = True
+            yaml.indent(mapping=2, sequence=4, offset=2)
+
+            # Load the existing YAML with comment preservation
+            with open(file_path, "r") as f:
+                doc = yaml.load(f)  # nosec: B506 - Safe loading handled by ruamel.yaml
+
+            # Apply updates while preserving comments
+            self._apply_updates_to_ruamel_doc(doc, updates)
+
+            # Write back with preserved comments
+            with open(file_path, "w") as f:
+                yaml.dump(doc, f)
+
+            return doc
+
+        except ImportError:
+            # Fallback to simple merge if ruamel.yaml not available
+            return self._merge_data(current_data, updates)
+        except Exception:
+            # Fallback on any error
+            return self._merge_data(current_data, updates)
+
+    def _apply_updates_to_tomlkit_doc(self, doc: Any, updates: Any) -> None:
+        """Apply updates to a tomlkit document."""
+        if not isinstance(updates, dict):
+            return
+
+        for key, value in updates.items():
+            if isinstance(value, dict):
+                if key not in doc:
+                    doc[key] = tomlkit.table()
+                elif not isinstance(doc[key], tomlkit.items.Table):
+                    doc[key] = tomlkit.table()
+                self._apply_updates_to_tomlkit_doc(doc[key], value)
+            else:
+                doc[key] = value
+
+    def _apply_updates_to_ruamel_doc(self, doc: Any, updates: Any) -> None:
+        """Apply updates to a ruamel.yaml document."""
+        if not isinstance(updates, dict):
+            return
+
+        if not isinstance(doc, dict):
+            # If doc is not a dict, we can't merge updates
+            return
+
+        for key, value in updates.items():
+            if isinstance(value, dict):
+                if key not in doc:
+                    doc[key] = {}
+                elif not isinstance(doc[key], dict):
+                    doc[key] = {}
+                self._apply_updates_to_ruamel_doc(doc[key], value)
+            else:
+                doc[key] = value
+
     def _write_basic_toml(self, file_path: Path, data: Any) -> None:
         """Basic TOML writer fallback."""
         content = ""
@@ -713,14 +1033,11 @@ class PatchEngine:
             if operation.file_format == FileFormat.TEXT:
                 target_path.write_text(operation.data or "")
             else:
-                # For structured formats, merge the data
-                current_data = self._read_structured_file(
-                    target_path, operation.file_format
+                # For structured formats, merge the data with comment preservation
+                self._merge_structured_file(
+                    target_path, operation.data, operation.file_format
                 )
-                merged_data = self._merge_data(current_data, operation.data)
-                self._write_structured_file(
-                    target_path, merged_data, operation.file_format
-                )
+                # Note: _merge_structured_file handles writing the file
 
         return PatchResult(
             operation=operation, success=True, message=f"Updated file: {target_path}"

@@ -289,6 +289,48 @@ def check() -> None:
 
     all_passed = True
 
+    # Run linting
+    console.print("  [dim]Running linter...[/dim]")
+    lint_exit_code = executor.run_ruff_check(lint_paths)
+    if lint_exit_code == 0:
+        console.print("  [green]✓[/green] Linting passed")
+    else:
+        console.print("  [red]✗[/red] Linting failed")
+        all_passed = False
+
+    # Run format check
+    console.print("  [dim]Checking formatting...[/dim]")
+    format_exit_code = executor.run_ruff_format(format_paths, check_only=True)
+    if format_exit_code == 0:
+        console.print("  [green]✓[/green] Formatting check passed")
+    else:
+        console.print("  [red]✗[/red] Formatting check failed")
+        all_passed = False
+
+    # Run type checking only if explicitly enabled (boolean or dict flag).
+    # This avoids accidentally running heavy type checkers during tests
+    # when users set a string like "pyright" as the tool preference.
+    types_setting = config.get("features.types", False)
+    types_enabled = (isinstance(types_setting, bool) and types_setting is True) or (
+        isinstance(types_setting, dict) and bool(types_setting.get("enabled", False))
+    )
+
+    if types_enabled:
+        console.print("  [dim]Running type checker...[/dim]")
+        type_exit_code = executor.run_type_check()
+        if type_exit_code == 0:
+            console.print("  [green]✓[/green] Type checking passed")
+        else:
+            console.print("  [red]✗[/red] Type checking failed")
+            all_passed = False
+    else:
+        console.print("  [dim]Type checking skipped (not enabled)[/dim]")
+
+    if all_passed:
+        console.print("[green]✓[/green] All checks passed!")
+    else:
+        console.print("[red]✗[/red] Some checks failed")
+
 
 @main.command()
 @click.option("--plan", is_flag=True, help="Show plan without applying changes")
@@ -301,6 +343,7 @@ def apply(plan: bool, force: bool) -> None:
     console.print("[bold purple]🔧[/bold purple] Applying configuration...")
 
     config = Config()
+    config.load()  # Load the configuration
     engine = PatchEngine()
 
     if plan:

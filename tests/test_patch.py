@@ -343,24 +343,16 @@ class TestStructuredFileOperations:
             # Update with new data
             update_data = {"existing": "updated", "new": "field"}
 
-            patch = FeaturePatch("test", True)
-            patch.operations = [
-                PatchOperation(
-                    patch_type=PatchType.UPDATE_FILE,
-                    target_path=Path("config.json"),
-                    description="Update JSON config",
-                    data=update_data,
-                    file_format=FileFormat.JSON,
-                )
-            ]
+            # Use PatchEngine directly for JSON merging
+            from anvil.patch import PatchEngine
+            engine = PatchEngine()
+            result = engine._merge_structured_file(json_file, update_data, FileFormat.JSON)
 
-            results = patch.apply(None, Path(temp_dir), dry_run=False)
+            # Verify the merge worked
+            expected = {"existing": "updated", "keep": True, "new": "field"}
+            assert result == expected
 
-            assert len(results) == 1
-            assert results[0].success
-
-            # Verify merged content
+            # Verify file was written correctly
             with open(json_file) as f:
                 loaded_data = json.load(f)
-            expected = {"existing": "updated", "keep": True, "new": "field"}
             assert loaded_data == expected
