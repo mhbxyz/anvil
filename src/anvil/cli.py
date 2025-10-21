@@ -291,5 +291,73 @@ def build(wheel: bool, sdist: bool) -> None:
         console.print("[red]✗[/red] Build failed")
 
 
+@main.command()
+@click.option(
+    "--dry-run", is_flag=True, help="Show what would be done without doing it"
+)
+@click.option(
+    "--patch", is_flag=True, help="Create patch file instead of applying changes"
+)
+@click.option("--force", is_flag=True, help="Force apply without confirmation")
+def release(dry_run: bool, patch: bool, force: bool) -> None:
+    """Release the project using commitizen and git tags."""
+    from .config import Config
+    from .tools import ToolExecutor
+
+    console.print("[bold red]🚀[/bold red] Preparing release...")
+
+    config = Config()
+    executor = ToolExecutor(config)
+
+    # Check if commitizen is available
+    if not executor.detector.is_available("cz"):
+        console.print("[red]Error:[/red] commitizen not available")
+        console.print("[dim]Install with: uv add commitizen[/dim]")
+        return
+
+    # Check if we're in a git repository
+    if not executor.detector.is_available("git"):
+        console.print("[red]Error:[/red] git not available")
+        return
+
+    # Check git status
+    if executor.run_command(["git", "status", "--porcelain"]) == 0:
+        # No changes to commit
+        console.print("[dim]Working directory is clean[/dim]")
+    else:
+        console.print(
+            "[yellow]Warning:[/yellow] Working directory has uncommitted changes"
+        )
+        if not force:
+            console.print("[dim]Use --force to continue anyway[/dim]")
+            return
+
+    # Run commitizen bump
+    console.print("[dim]Running commitizen bump...[/dim]")
+    bump_cmd = ["cz", "bump"]
+    if dry_run:
+        bump_cmd.append("--dry-run")
+    elif patch:
+        bump_cmd.extend(["--changelog", "--patch"])
+    else:
+        bump_cmd.append("--yes")
+
+    exit_code = executor.run_command(bump_cmd)
+    if exit_code != 0:
+        console.print("[red]✗[/red] Release failed")
+        return
+
+    if dry_run:
+        console.print("[green]✓[/green] Dry run completed")
+        return
+
+    console.print("[green]✓[/green] Release completed successfully!")
+    console.print("[dim]Don't forget to push tags: git push --tags[/dim]")
+
+
+if __name__ == "__main__":
+    main()
+
+
 if __name__ == "__main__":
     main()

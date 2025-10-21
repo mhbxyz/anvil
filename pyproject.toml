@@ -73,7 +73,15 @@ dev-dependencies = [
     "pyright>=1.1.0",
     "bandit>=1.7.0",
     "pyinstaller>=6.0.0",
+    "commitizen>=3.0.0",
 ]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+changelog_file = "CHANGELOG.md"
+update_changelog_on_bump = true
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]
