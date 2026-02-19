@@ -121,6 +121,11 @@ pyignite check
 - **predictable output** with actionable errors
 - **sensible defaults** over verbose setup
 
+### v1 command specification
+
+- Command contract: `docs/command-contract-v1.md`
+- Deferred scope ADR: `docs/adr/0001-defer-v1-non-goals.md`
+
 ---
 
 ## Roadmap (Internal Alpha)
