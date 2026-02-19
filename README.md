@@ -1,4 +1,4 @@
-# Anvil
+# PyIgnite
 
 <p align="center">
   <strong>The developer toolchain for Python APIs</strong><br/>
@@ -18,7 +18,7 @@
 
 ---
 
-## Why Anvil?
+## Why PyIgnite?
 
 Python API teams often lose time on repetitive setup and fragmented tooling:
 
@@ -27,7 +27,7 @@ Python API teams often lose time on repetitive setup and fragmented tooling:
 - lint/test/type commands are scattered
 - onboarding is slow and error-prone
 
-**Anvil** brings a Vite-like experience to Python APIs:
+**PyIgnite** brings a Vite-like experience to Python APIs:
 
 - instant-ish local loop
 - strong conventions
@@ -48,13 +48,13 @@ A new API project should be runnable in minutes, and the save -> feedback loop s
 
 ### Scope
 
-- `anvil new`
-- `anvil dev`
-- `anvil run`
-- `anvil test`
-- `anvil lint`
-- `anvil fmt`
-- `anvil check`
+- `pyignite new`
+- `pyignite dev`
+- `pyignite run`
+- `pyignite test`
+- `pyignite lint`
+- `pyignite fmt`
+- `pyignite check`
 
 ### Non-goals for v1 alpha
 
@@ -67,7 +67,7 @@ A new API project should be runnable in minutes, and the save -> feedback loop s
 
 ## Recommended Tech Stack
 
-Anvil is built with a pragmatic Python-native stack:
+PyIgnite is built with a pragmatic Python-native stack:
 
 - **Runtime**: Python `3.12+`
 - **Packaging / env**: `uv`, `pyproject.toml`, `hatchling`
@@ -105,13 +105,13 @@ This keeps startup friction low and gives teams freedom to choose their data lay
 ## Command Model
 
 ```bash
-anvil new myapi --profile api --template fastapi
-anvil dev
-anvil run
-anvil test
-anvil lint
-anvil fmt
-anvil check
+pyignite new myapi --profile api --template fastapi
+pyignite dev
+pyignite run
+pyignite test
+pyignite lint
+pyignite fmt
+pyignite check
 ```
 
 ### Command expectations
@@ -155,7 +155,7 @@ Internal alpha targets:
 
 ## Contributing (Early Stage)
 
-Anvil is in **internal alpha planning and execution** mode.
+PyIgnite is in **internal alpha planning and execution** mode.
 
 If you contribute:
 
