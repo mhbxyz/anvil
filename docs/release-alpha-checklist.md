@@ -58,7 +58,13 @@ Record rehearsal outcome:
    - alpha scope
    - known constraints (including delegated `uv` backend)
    - how to onboard (`docs/quickstart-alpha.md`)
-   - where to report feedback (`docs/alpha-feedback-template.md`)
+   - where to report feedback (`.github/ISSUE_TEMPLATE/alpha-feedback.yml` and `docs/alpha-feedback-template.md`)
+
+## Feedback/Triage Loop (post-release)
+
+1. Collect feedback through the alpha issue template.
+2. Run triage using `docs/triage-alpha-process.md`.
+3. Update ranked backlog in `docs/post-alpha-roadmap.md` after each cycle.
 
 ## Rollback and Contingency
 

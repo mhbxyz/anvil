@@ -2,6 +2,9 @@
 
 Use this template when reporting internal alpha feedback.
 
+Prefer opening feedback with the GitHub issue form at `.github/ISSUE_TEMPLATE/alpha-feedback.yml`.
+Triage and prioritization rules are defined in `docs/triage-alpha-process.md`.
+
 ## Title format
 
 `[alpha][<severity>] <short symptom>`

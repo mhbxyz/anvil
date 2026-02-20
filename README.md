@@ -137,6 +137,8 @@ pyignite check
 - Alpha troubleshooting: `docs/troubleshooting-alpha.md`
 - Alpha feedback template: `docs/alpha-feedback-template.md`
 - Alpha release checklist: `docs/release-alpha-checklist.md`
+- Alpha triage process: `docs/triage-alpha-process.md`
+- Post-alpha roadmap: `docs/post-alpha-roadmap.md`
 
 ---
 
