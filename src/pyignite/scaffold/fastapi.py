@@ -164,9 +164,11 @@ def _package_init() -> str:
 def _main_module() -> str:
     return """from fastapi import FastAPI
 
+from .api.health import router as health_router
 from .api.router import router
 
 app = FastAPI(title="PyIgnite API")
+app.include_router(health_router)
 app.include_router(router)
 """
 
@@ -186,10 +188,7 @@ def health() -> dict[str, str]:
 def _router_module() -> str:
     return """from fastapi import APIRouter
 
-from .health import router as health_router
-
 router = APIRouter(prefix="/api")
-router.include_router(health_router)
 
 
 @router.get("/")

@@ -7,5 +7,6 @@ Planned baseline pipeline stages:
 - format check (ruff format --check .)
 - type-check (pyright)
 - test (pytest)
+- e2e (`scripts/run_e2e.sh`)
 
 This file documents the intended shape before a full workflow is added.

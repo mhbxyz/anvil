@@ -129,6 +129,7 @@ pyignite check
 - FastAPI scaffold layout: `docs/fastapi-scaffold-template.md`
 - Dev incremental checks behavior: `docs/devloop-incremental-checks.md`
 - Dev loop terminal UX: `docs/devloop-terminal-ux.md`
+- E2E testing guide: `docs/e2e-testing.md`
 
 ---
 

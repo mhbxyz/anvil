@@ -63,8 +63,10 @@ def test_fastapi_template_includes_deterministic_health_endpoint() -> None:
     files = build_fastapi_template(context)
 
     health_module = files[Path("src/myapi/api/health.py")]
+    main_module = files[Path("src/myapi/main.py")]
     assert '@router.get("/health")' in health_module
     assert 'return {"status": "ok"}' in health_module
+    assert "app.include_router(health_router)" in main_module
 
 
 def test_fastapi_template_generates_health_baseline_test() -> None:
