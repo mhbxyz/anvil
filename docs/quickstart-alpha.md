@@ -2,6 +2,19 @@
 
 Goal: run your first PyIgnite API project in under 10 minutes.
 
+## Execution model (important)
+
+PyIgnite is a standalone workflow CLI, but dependency/environment execution is delegated to `uv` in alpha.
+
+- Bootstrap from anywhere: `pyignite new ...`
+- Inside generated projects: run workflow commands through project env (`uv run pyignite ...`)
+
+Why this split?
+
+- deterministic tool versions from project lock/env
+- consistent behavior across contributors and CI
+- explicit separation of concerns (`pyignite` orchestration, `uv` packaging runtime)
+
 ## Prerequisites
 
 - Python 3.12+
@@ -26,6 +39,8 @@ Expected result:
 ```bash
 uv sync --extra dev
 ```
+
+Note: a dedicated `pyignite install` wrapper is planned for M5.
 
 Expected result:
 

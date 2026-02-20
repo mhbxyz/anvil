@@ -125,6 +125,7 @@ pyignite check
 
 - Command contract: `docs/command-contract-v1.md`
 - Deferred scope ADR: `docs/adr/0001-defer-v1-non-goals.md`
+- Standalone/delegated backend ADR: `docs/adr/0002-standalone-cli-delegated-packaging.md`
 - Config example (API profile): `docs/examples/pyignite.toml`
 - FastAPI scaffold layout: `docs/fastapi-scaffold-template.md`
 - Dev incremental checks behavior: `docs/devloop-incremental-checks.md`

@@ -2,6 +2,15 @@
 
 Use this guide when the quickstart flow fails.
 
+## Why do project commands use `uv run pyignite ...`?
+
+In alpha, PyIgnite delegates environment/package execution to `uv` while keeping PyIgnite as the standalone workflow CLI.
+
+- `pyignite` handles orchestration and diagnostics
+- `uv` handles environment and tool execution consistency
+
+See `docs/adr/0002-standalone-cli-delegated-packaging.md` for the architecture decision.
+
 ## `ERROR [config]` when running commands
 
 Symptoms:
