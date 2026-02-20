@@ -2,7 +2,7 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Dev Loop](README.md)
 
-This document defines the `pyignite dev` output model for long-running sessions.
+This document defines the `pyqck dev` output model for long-running sessions.
 
 ## Goals
 
@@ -45,7 +45,7 @@ Run [lint]
 FAILED [lint] exit 1 (53ms)
 Details:
 src/service.py:10:5 F401 unused import
-Hint: run `pyignite lint` for full output.
+Hint: run `pyqck lint` for full output.
 Summary #6: failed on lint after 70ms
 ```
 

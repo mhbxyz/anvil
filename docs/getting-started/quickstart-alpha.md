@@ -2,20 +2,20 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Getting Started](README.md)
 
-Goal: run your first PyIgnite API project in under 10 minutes.
+Goal: run your first PyQuick API project in under 10 minutes.
 
 ## Execution model (important)
 
-PyIgnite is a standalone workflow CLI, but dependency/environment execution is delegated to `uv` in alpha.
+PyQuick is a standalone workflow CLI, but dependency/environment execution is delegated to `uv` in alpha.
 
-- Bootstrap from anywhere: `pyignite new ...`
-- Inside generated projects: run workflow commands through project env (`uv run pyignite ...`)
+- Bootstrap from anywhere: `pyqck new ...`
+- Inside generated projects: run workflow commands through project env (`uv run pyqck ...`)
 
 Why this split?
 
 - deterministic tool versions from project lock/env
 - consistent behavior across contributors and CI
-- explicit separation of concerns (`pyignite` orchestration, `uv` packaging runtime)
+- explicit separation of concerns (`pyqck` orchestration, `uv` packaging runtime)
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ Why this split?
 ## 1) Create a new API project
 
 ```bash
-pyignite new myapi --profile api --template fastapi
+pyqck new myapi --profile api --template fastapi
 cd myapi
 ```
 
@@ -34,7 +34,7 @@ Expected result:
 
 - project files generated
 - `src/` layout ready
-- `pyignite.toml` present
+- `pyqck.toml` present
 
 ## 2) Install dependencies
 
@@ -42,7 +42,7 @@ Expected result:
 uv sync --extra dev
 ```
 
-Note: a dedicated `pyignite install` wrapper is planned for M5.
+Note: a dedicated `pyqck install` wrapper is planned for M5.
 
 Expected result:
 
@@ -52,7 +52,7 @@ Expected result:
 ## 3) Start the API
 
 ```bash
-uv run pyignite run
+uv run pyqck run
 ```
 
 Expected result:
@@ -69,7 +69,7 @@ curl http://127.0.0.1:8000/health
 ## 4) Run the dev loop
 
 ```bash
-uv run pyignite dev
+uv run pyqck dev
 ```
 
 Expected result:
@@ -80,8 +80,8 @@ Expected result:
 ## 5) Validate quality gates
 
 ```bash
-uv run pyignite test
-uv run pyignite check
+uv run pyqck test
+uv run pyqck check
 ```
 
 Expected result:
@@ -91,11 +91,11 @@ Expected result:
 
 ## Success checklist
 
-- [ ] `pyignite new` generated project successfully
+- [ ] `pyqck new` generated project successfully
 - [ ] dependencies installed with `uv sync --extra dev`
 - [ ] `/health` returns `{"status": "ok"}`
-- [ ] `pyignite dev` reacts to file changes
-- [ ] `pyignite test` and `pyignite check` pass
+- [ ] `pyqck dev` reacts to file changes
+- [ ] `pyqck test` and `pyqck check` pass
 
 ## If something fails
 

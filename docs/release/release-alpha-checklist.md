@@ -8,7 +8,7 @@ Use this checklist to run a repeatable, auditable go/no-go process for internal 
 
 - Target release: Internal Alpha
 - Product scope: FastAPI profile (`new`, `dev`, `run`, `test`, `lint`, `fmt`, `check`)
-- Packaging/runtime model: standalone PyIgnite orchestration with delegated `uv` backend
+- Packaging/runtime model: standalone PyQuick orchestration with delegated `uv` backend
 
 ## Go/No-Go Gates
 
@@ -18,7 +18,7 @@ Mark each gate as `pass`, `blocked`, or `waived` (with rationale).
 | --- | --- | --- | --- | --- |
 | Functional workflow | `uv run pytest tests/e2e` | Full happy-path and failure-path E2E pass | QA Lead | pending |
 | Core test suite | `uv run pytest` | Full suite green | QA Lead | pending |
-| Quality tooling | `uv run pyignite check` | Deterministic check output, zero failures | Engineering | pending |
+| Quality tooling | `uv run pyqck check` | Deterministic check output, zero failures | Engineering | pending |
 | Perf guardrails | `scripts/run_benchmarks.sh` | No regression beyond configured threshold | Performance Owner | pending |
 | Docs readiness | Manual review of alpha docs links and command accuracy | Quickstart and troubleshooting are executable | DX/Docs Owner | pending |
 | Release communication | Internal announcement draft + channel prepared | Audience, scope, known limits, feedback path included | Product/PM | pending |
@@ -42,7 +42,7 @@ Run in order on a clean local environment:
 2. `uv run pytest`
 3. `scripts/run_e2e.sh`
 4. `scripts/run_benchmarks.sh`
-5. `uv run pyignite --help` (command surface check)
+5. `uv run pyqck --help` (command surface check)
 6. Quickstart dry-run using [Alpha quickstart](../getting-started/quickstart-alpha.md)
 
 Record rehearsal outcome:

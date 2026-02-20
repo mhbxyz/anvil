@@ -4,8 +4,8 @@ from pathlib import Path
 
 import typer
 
-from pyignite.scaffold import FastAPITemplateContext, build_fastapi_template
-from pyignite.scaffold.writer import write_scaffold
+from pyqck.scaffold import FastAPITemplateContext, build_fastapi_template
+from pyqck.scaffold.writer import write_scaffold
 
 
 def new_command(
@@ -13,7 +13,7 @@ def new_command(
     profile: str = typer.Option("api", "--profile", help="Project profile."),
     template: str = typer.Option("fastapi", "--template", help="Template to use."),
 ) -> None:
-    """Create a new PyIgnite project scaffold."""
+    """Create a new PyQuick project scaffold."""
 
     if profile != "api":
         _usage_error("Unsupported profile.", "Use `--profile api` for v1.")
@@ -58,8 +58,8 @@ def new_command(
     typer.echo("Next steps:")
     typer.echo(f"  cd {name}")
     typer.echo("  uv sync")
-    typer.echo("  uv run pyignite run")
-    typer.echo("  uv run pyignite test")
+    typer.echo("  uv run pyqck run")
+    typer.echo("  uv run pyqck test")
 
 
 def _usage_error(message: str, hint: str) -> None:

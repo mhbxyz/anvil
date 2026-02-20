@@ -1,26 +1,26 @@
-# PyIgnite
+# PyQuick
 
 The developer toolchain for Python APIs.
 
 ## TL;DR
 
 ```bash
-pyignite new myapi --profile api --template fastapi
+pyqck new myapi --profile api --template fastapi
 cd myapi
 uv sync --extra dev
-uv run pyignite run
+uv run pyqck run
 ```
 
 ## Core Commands
 
 ```bash
-pyignite new <name> --profile api --template fastapi
-pyignite dev
-pyignite run
-pyignite test
-pyignite lint
-pyignite fmt
-pyignite check
+pyqck new <name> --profile api --template fastapi
+pyqck dev
+pyqck run
+pyqck test
+pyqck lint
+pyqck fmt
+pyqck check
 ```
 
 ## Quick Navigation

@@ -5,9 +5,9 @@ from pathlib import Path
 import tomllib
 from typing import Any
 
-from pyignite.scaffold.names import normalize_package_name
+from pyqck.scaffold.names import normalize_package_name
 
-DEFAULT_CONFIG_FILE = "pyignite.toml"
+DEFAULT_CONFIG_FILE = "pyqck.toml"
 
 
 @dataclass(slots=True, frozen=True)
@@ -49,7 +49,7 @@ class ChecksSection:
 
 
 @dataclass(slots=True, frozen=True)
-class PyIgniteConfig:
+class PyQuickConfig:
     root_dir: Path
     file_path: Path
     project: ProjectSection
@@ -60,7 +60,7 @@ class PyIgniteConfig:
 
 
 class ConfigError(Exception):
-    """Raised when pyignite.toml is invalid."""
+    """Raised when pyqck.toml is invalid."""
 
     def __init__(self, message: str, hint: str) -> None:
         super().__init__(message)
@@ -75,7 +75,7 @@ class ProjectConfig:
     root_dir: Path
 
 
-def load_config(root_dir: Path, file_name: str = DEFAULT_CONFIG_FILE) -> PyIgniteConfig:
+def load_config(root_dir: Path, file_name: str = DEFAULT_CONFIG_FILE) -> PyQuickConfig:
     file_path = root_dir / file_name
     if not file_path.exists():
         return _default_config(root_dir=root_dir, file_path=file_path)
@@ -102,9 +102,9 @@ def load_config(root_dir: Path, file_name: str = DEFAULT_CONFIG_FILE) -> PyIgnit
     return _parse_config(root_dir=root_dir, file_path=file_path, raw=raw)
 
 
-def _default_config(root_dir: Path, file_path: Path) -> PyIgniteConfig:
+def _default_config(root_dir: Path, file_path: Path) -> PyQuickConfig:
     project = ProjectSection()
-    return PyIgniteConfig(
+    return PyQuickConfig(
         root_dir=root_dir,
         file_path=file_path,
         project=project,
@@ -115,7 +115,7 @@ def _default_config(root_dir: Path, file_path: Path) -> PyIgniteConfig:
     )
 
 
-def _parse_config(root_dir: Path, file_path: Path, raw: dict[str, Any]) -> PyIgniteConfig:
+def _parse_config(root_dir: Path, file_path: Path, raw: dict[str, Any]) -> PyQuickConfig:
     _assert_allowed_keys(
         actual=raw,
         allowed={"project", "tooling", "dev", "run", "checks"},
@@ -134,7 +134,7 @@ def _parse_config(root_dir: Path, file_path: Path, raw: dict[str, Any]) -> PyIgn
     run = _parse_run(run_raw, project=project)
     checks = _parse_checks(checks_raw)
 
-    return PyIgniteConfig(
+    return PyQuickConfig(
         root_dir=root_dir,
         file_path=file_path,
         project=project,

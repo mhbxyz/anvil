@@ -4,11 +4,11 @@
 
 Use this guide when the quickstart flow fails.
 
-## Why do project commands use `uv run pyignite ...`?
+## Why do project commands use `uv run pyqck ...`?
 
-In alpha, PyIgnite delegates environment/package execution to `uv` while keeping PyIgnite as the standalone workflow CLI.
+In alpha, PyQuick delegates environment/package execution to `uv` while keeping PyQuick as the standalone workflow CLI.
 
-- `pyignite` handles orchestration and diagnostics
+- `pyqck` handles orchestration and diagnostics
 - `uv` handles environment and tool execution consistency
 
 See [ADR 0002](../adr/0002-standalone-cli-delegated-packaging.md) for the architecture decision.
@@ -22,14 +22,14 @@ Symptoms:
 
 Common causes:
 
-- invalid TOML syntax in `pyignite.toml`
+- invalid TOML syntax in `pyqck.toml`
 - unsupported keys or wrong value types
 - invalid values (for example wrong `checks_mode`, invalid port)
 
 Fix:
 
-1. check `pyignite.toml` formatting
-2. compare against [reference config example](../reference/examples/pyignite.toml)
+1. check `pyqck.toml` formatting
+2. compare against [reference config example](../reference/examples/pyqck.toml)
 3. retry the command
 
 ## `ERROR [tooling]` about missing tool/runner
@@ -49,9 +49,9 @@ Fix:
 
 1. ensure `uv --version` works
 2. run `uv sync --extra dev` in project root
-3. verify `[tooling]` values in `pyignite.toml`
+3. verify `[tooling]` values in `pyqck.toml`
 
-## `pyignite run` fails to boot app
+## `pyqck run` fails to boot app
 
 Symptoms:
 
@@ -70,7 +70,7 @@ Fix:
 2. ensure an `app` variable exists
 3. change `[run].port` if needed
 
-## `pyignite dev` feels noisy or slow
+## `pyqck dev` feels noisy or slow
 
 Symptoms:
 

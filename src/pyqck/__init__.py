@@ -1,4 +1,4 @@
-"""PyIgnite package."""
+"""PyQuick package."""
 
 __all__ = ["__version__"]
 

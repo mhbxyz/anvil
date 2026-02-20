@@ -3,11 +3,11 @@ from typing import Sequence
 
 import typer
 
-from pyignite.config import ConfigError, PyIgniteConfig, load_config
-from pyignite.tooling import CommandResult, ToolAdapters, ToolError, ToolKey
+from pyqck.config import ConfigError, PyQuickConfig, load_config
+from pyqck.tooling import CommandResult, ToolAdapters, ToolError, ToolKey
 
 
-def load_config_or_exit() -> PyIgniteConfig:
+def load_config_or_exit() -> PyQuickConfig:
     try:
         return load_config(Path.cwd())
     except ConfigError as exc:

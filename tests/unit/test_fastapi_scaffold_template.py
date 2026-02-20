@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pyignite.scaffold import FastAPITemplateContext, build_fastapi_template, normalize_package_name
+from pyqck.scaffold import FastAPITemplateContext, build_fastapi_template, normalize_package_name
 
 
 def test_normalize_package_name_handles_common_cases() -> None:
@@ -19,17 +19,17 @@ def test_fastapi_template_uses_project_named_package() -> None:
     assert Path("src/my_api/api/health.py") in files
     assert Path("src/my_api/api/router.py") in files
     assert Path("tests/test_health.py") in files
-    assert Path("pyignite.toml") in files
+    assert Path("pyqck.toml") in files
 
 
 def test_fastapi_template_sets_run_app_path_to_package_main() -> None:
     context = FastAPITemplateContext.from_project_name("billing-service")
     files = build_fastapi_template(context)
 
-    pyignite_toml = files[Path("pyignite.toml")]
-    assert 'app = "billing_service.main:app"' in pyignite_toml
-    assert 'checks_mode = "incremental"' in pyignite_toml
-    assert "fallback_threshold = 8" in pyignite_toml
+    pyqck_toml = files[Path("pyqck.toml")]
+    assert 'app = "billing_service.main:app"' in pyqck_toml
+    assert 'checks_mode = "incremental"' in pyqck_toml
+    assert "fallback_threshold = 8" in pyqck_toml
 
 
 def test_fastapi_template_does_not_include_db_dependencies_or_files() -> None:

@@ -74,7 +74,7 @@ class DevLoopRenderer:
             for line in excerpt:
                 self._echo(line, err=True)
         self._secho(
-            f"Hint: run `pyignite {step}` for full output.",
+            f"Hint: run `pyqck {step}` for full output.",
             fg=typer.colors.YELLOW,
             err=True,
         )

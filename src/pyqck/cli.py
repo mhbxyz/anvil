@@ -1,12 +1,12 @@
 import typer
 from rich.console import Console
 
-from pyignite.commands import register_commands
+from pyqck.commands import register_commands
 
 app = typer.Typer(
-    name="pyignite",
+    name="pyqck",
     no_args_is_help=True,
-    help="PyIgnite CLI - developer toolchain for Python APIs.",
+    help="PyQuick CLI - developer toolchain for Python APIs.",
 )
 console = Console()
 

@@ -1,6 +1,6 @@
 import typer
 
-from pyignite.commands import check, dev, fmt, lint, new, run, test
+from pyqck.commands import check, dev, fmt, lint, new, run, test
 
 
 def register_commands(app: typer.Typer) -> None:

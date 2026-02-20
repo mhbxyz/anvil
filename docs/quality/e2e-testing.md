@@ -27,7 +27,7 @@ uv run pytest tests/e2e
 ## Flakiness mitigation notes
 
 - E2E tests use isolated temp directories per scenario.
-- `pyignite run` smoke checks use a dynamically selected free port.
+- `pyqck run` smoke checks use a dynamically selected free port.
 - long-running server process is terminated explicitly after startup validation.
 - subprocess calls use explicit timeouts to avoid hangs.
 - assertions focus on deterministic diagnostics (`ERROR [config]`, `ERROR [tooling]`, `Hint:`).

@@ -1,8 +1,8 @@
 import typer
 
-from pyignite.commands._common import build_adapters_or_exit, ensure_tool_available_or_exit
-from pyignite.devloop import run_dev_loop
-from pyignite.tooling import ToolKey
+from pyqck.commands._common import build_adapters_or_exit, ensure_tool_available_or_exit
+from pyqck.devloop import run_dev_loop
+from pyqck.tooling import ToolKey
 
 
 def dev_command() -> None:

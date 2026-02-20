@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 from typer.testing import CliRunner
 
-from pyignite.cli import app
-from pyignite.tooling import CommandResult, ToolKey
+from pyqck.cli import app
+from pyqck.tooling import CommandResult, ToolKey
 
 
 @dataclass(slots=True)
@@ -35,7 +35,7 @@ def _result(exit_code: int, stdout: str = "", stderr: str = "") -> CommandResult
 
 
 def test_lint_runs_default_args(monkeypatch) -> None:
-    from pyignite.commands import lint
+    from pyqck.commands import lint
 
     adapters = FakeAdapters(config=_config(), responses=deque([_result(0)]))
     monkeypatch.setattr(lint, "build_adapters_or_exit", lambda: adapters)
@@ -48,7 +48,7 @@ def test_lint_runs_default_args(monkeypatch) -> None:
 
 
 def test_lint_propagates_tool_exit_code(monkeypatch) -> None:
-    from pyignite.commands import lint
+    from pyqck.commands import lint
 
     adapters = FakeAdapters(config=_config(), responses=deque([_result(7)]))
     monkeypatch.setattr(lint, "build_adapters_or_exit", lambda: adapters)
@@ -60,7 +60,7 @@ def test_lint_propagates_tool_exit_code(monkeypatch) -> None:
 
 
 def test_run_uses_defaults_and_passthrough_args(monkeypatch) -> None:
-    from pyignite.commands import run
+    from pyqck.commands import run
 
     adapters = FakeAdapters(config=_config(), responses=deque([_result(0)]))
     monkeypatch.setattr(run, "build_adapters_or_exit", lambda: adapters)
@@ -77,7 +77,7 @@ def test_run_uses_defaults_and_passthrough_args(monkeypatch) -> None:
 
 
 def test_run_uses_config_overrides(monkeypatch) -> None:
-    from pyignite.commands import run
+    from pyqck.commands import run
 
     config = _config()
     config.run = SimpleNamespace(app="billing.main:app", host="0.0.0.0", port=9001)
@@ -96,7 +96,7 @@ def test_run_uses_config_overrides(monkeypatch) -> None:
 
 
 def test_run_propagates_exit_code_and_shows_app_hint(monkeypatch) -> None:
-    from pyignite.commands import run
+    from pyqck.commands import run
 
     stderr = 'ERROR:    Error loading ASGI app. Could not import module "wrong.module".'
     adapters = FakeAdapters(config=_config(), responses=deque([_result(7, stderr=stderr)]))
@@ -106,11 +106,11 @@ def test_run_propagates_exit_code_and_shows_app_hint(monkeypatch) -> None:
 
     assert result.exit_code == 7
     assert "ERROR [tooling] Failed to run ASGI app `myapi.main:app`." in result.output
-    assert "Hint: Check `[run].app` in `pyignite.toml`" in result.output
+    assert "Hint: Check `[run].app` in `pyqck.toml`" in result.output
 
 
 def test_check_runs_full_pipeline_and_reports_summary(monkeypatch) -> None:
-    from pyignite.commands import check
+    from pyqck.commands import check
 
     adapters = FakeAdapters(
         config=_config(stop_on_first_failure=False),

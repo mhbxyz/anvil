@@ -2,14 +2,14 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Dev Loop](README.md)
 
-PyIgnite uses staged feedback in `pyignite dev` to keep save-to-feedback fast while preserving correctness.
+PyQuick uses staged feedback in `pyqck dev` to keep save-to-feedback fast while preserving correctness.
 
 ## Modes
 
 - `incremental` (default): target checks by changed paths when safe.
 - `full`: always run full checks (`lint`, `type`, `test`) on every save.
 
-Configure in `pyignite.toml`:
+Configure in `pyqck.toml`:
 
 ```toml
 [dev]
@@ -29,9 +29,9 @@ fallback_threshold = 8
 
 ## Automatic fallback to full checks
 
-PyIgnite falls back to full checks when uncertainty is high, including:
+PyQuick falls back to full checks when uncertainty is high, including:
 
-- config/tooling file changes (`pyproject.toml`, `pyignite.toml`, `ruff*.toml`, `pyrightconfig.json`)
+- config/tooling file changes (`pyproject.toml`, `pyqck.toml`, `ruff*.toml`, `pyrightconfig.json`)
 - changed file count exceeds `fallback_threshold`
 - Python changes outside known `src/` / `tests/` scopes
 

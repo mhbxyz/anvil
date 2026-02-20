@@ -4,14 +4,14 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import Sequence
 
-from pyignite.tooling import ToolKey
+from pyqck.tooling import ToolKey
 
 CHECKS_MODE_INCREMENTAL = "incremental"
 CHECKS_MODE_FULL = "full"
 
 FULL_RUN_TRIGGERS = {
     "pyproject.toml",
-    "pyignite.toml",
+    "pyqck.toml",
     "ruff.toml",
     "pyrightconfig.json",
 }

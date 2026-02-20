@@ -1,4 +1,4 @@
-from pyignite.tooling.adapters import (
+from pyqck.tooling.adapters import (
     CommandResult,
     ToolAdapters,
     ToolError,

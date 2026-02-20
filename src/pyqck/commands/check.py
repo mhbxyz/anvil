@@ -1,7 +1,7 @@
 import typer
 
-from pyignite.commands._common import build_adapters_or_exit
-from pyignite.tooling import ToolError, ToolKey
+from pyqck.commands._common import build_adapters_or_exit
+from pyqck.tooling import ToolError, ToolKey
 
 
 def check_command() -> None:

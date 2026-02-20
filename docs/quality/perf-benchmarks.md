@@ -2,11 +2,11 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Quality and Performance](README.md)
 
-PyIgnite includes repeatable performance scenarios and regression guardrails.
+PyQuick includes repeatable performance scenarios and regression guardrails.
 
 ## Scenarios
 
-- `startup_run`: end-to-end startup latency for `pyignite run` in a generated sample project.
+- `startup_run`: end-to-end startup latency for `pyqck run` in a generated sample project.
 - `save_to_feedback_incremental_test_change`: incremental feedback latency for a test-file change (`lint` + targeted `test`).
 
 ## Run benchmarks locally

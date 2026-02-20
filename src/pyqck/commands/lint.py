@@ -1,7 +1,7 @@
 import typer
 
-from pyignite.commands._common import build_adapters_or_exit, run_tool_or_exit
-from pyignite.tooling import ToolKey
+from pyqck.commands._common import build_adapters_or_exit, run_tool_or_exit
+from pyqck.tooling import ToolKey
 
 
 def lint_command(ctx: typer.Context) -> None:

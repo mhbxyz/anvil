@@ -1,4 +1,4 @@
-from pyignite.devloop.renderer import CycleSummary, DevLoopRenderer
+from pyqck.devloop.renderer import CycleSummary, DevLoopRenderer
 
 
 class Sink:
@@ -86,6 +86,6 @@ def test_renderer_failure_snapshot() -> None:
         "ERR:FAILED [lint] exit 1 (52ms)",
         "ERR:Details:",
         "ERR:src/service.py:10:5 F401 unused import",
-        "ERR:Hint: run `pyignite lint` for full output.",
+        "ERR:Hint: run `pyqck lint` for full output.",
         "ERR:Summary #3: failed on lint after 70ms",
     ]

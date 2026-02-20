@@ -3,8 +3,8 @@ from pathlib import Path
 import subprocess
 from types import SimpleNamespace
 
-from pyignite.devloop.orchestrator import run_dev_loop
-from pyignite.tooling import CommandResult, ToolKey
+from pyqck.devloop.orchestrator import run_dev_loop
+from pyqck.tooling import CommandResult, ToolKey
 
 
 class FakeProcess:

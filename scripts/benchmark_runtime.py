@@ -33,7 +33,7 @@ def main() -> None:
     if len(sys.argv) > 1 and sys.argv[1] == "--output" and len(sys.argv) > 2:
         output_path = Path(sys.argv[2]).resolve()
 
-    with tempfile.TemporaryDirectory(prefix="pyignite-bench-") as temp_dir_raw:
+    with tempfile.TemporaryDirectory(prefix="pyqck-bench-") as temp_dir_raw:
         temp_dir = Path(temp_dir_raw)
         project_dir = _create_sample_project(repo_root=repo_root, workspace=temp_dir)
 
@@ -76,7 +76,7 @@ def _create_sample_project(*, repo_root: Path, workspace: Path) -> Path:
         [
             sys.executable,
             "-m",
-            "pyignite",
+            "pyqck",
             "new",
             "sample",
             "--profile",
@@ -97,12 +97,12 @@ def _create_sample_project(*, repo_root: Path, workspace: Path) -> Path:
 def _measure_startup_cycle(*, project_dir: Path, repo_root: Path) -> float:
     env = _bench_env(repo_root)
     port = _free_port()
-    config_path = project_dir / "pyignite.toml"
+    config_path = project_dir / "pyqck.toml"
     _set_run_port(config_path, port)
 
     started = time.perf_counter()
     process = subprocess.Popen(
-        [sys.executable, "-m", "pyignite", "run"],
+        [sys.executable, "-m", "pyqck", "run"],
         cwd=project_dir,
         env=env,
         stdout=subprocess.PIPE,
@@ -130,13 +130,13 @@ def _measure_incremental_feedback_cycle(*, project_dir: Path, repo_root: Path) -
 
     started = time.perf_counter()
     _run(
-        [sys.executable, "-m", "pyignite", "lint", "check", "tests/test_health.py"],
+        [sys.executable, "-m", "pyqck", "lint", "check", "tests/test_health.py"],
         cwd=project_dir,
         env=env,
         timeout=120,
     )
     _run(
-        [sys.executable, "-m", "pyignite", "test", "tests/test_health.py"],
+        [sys.executable, "-m", "pyqck", "test", "tests/test_health.py"],
         cwd=project_dir,
         env=env,
         timeout=120,
@@ -195,7 +195,7 @@ def _set_run_port(config_path: Path, port: int) -> None:
         updated.append(line)
 
     if not replaced:
-        raise RuntimeError("Could not locate `[run].port` in pyignite.toml")
+        raise RuntimeError("Could not locate `[run].port` in pyqck.toml")
 
     config_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
 

@@ -68,9 +68,9 @@ body:
       label: Commands run
       description: Paste exact commands
       placeholder: |
-        pyignite new myapi --profile api --template fastapi
+        pyqck new myapi --profile api --template fastapi
         uv sync --extra dev
-        uv run pyignite dev
+        uv run pyqck dev
     validations:
       required: true
 

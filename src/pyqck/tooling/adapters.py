@@ -7,7 +7,7 @@ import shutil
 import subprocess
 from typing import Callable, Sequence
 
-from pyignite.config import PyIgniteConfig
+from pyqck.config import PyQuickConfig
 
 
 class ToolKey(StrEnum):
@@ -58,7 +58,7 @@ class SubprocessRunner:
 class ToolAdapters:
     def __init__(
         self,
-        config: PyIgniteConfig,
+        config: PyQuickConfig,
         runner: SubprocessRunner | None = None,
         which: Callable[[str], str | None] | None = None,
     ) -> None:
@@ -67,7 +67,7 @@ class ToolAdapters:
         self._which = which or shutil.which
 
     @property
-    def config(self) -> PyIgniteConfig:
+    def config(self) -> PyQuickConfig:
         return self._config
 
     def spec(self, key: ToolKey) -> ToolSpec:

@@ -1,4 +1,4 @@
-from pyignite.cli import main
+from pyqck.cli import main
 
 
 if __name__ == "__main__":

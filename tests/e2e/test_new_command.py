@@ -2,7 +2,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from pyignite.cli import app
+from pyqck.cli import app
 
 
 def test_new_generates_fastapi_project_structure() -> None:
@@ -16,16 +16,16 @@ def test_new_generates_fastapi_project_structure() -> None:
 
         assert result.exit_code == 0
         assert "Created project `my-api`" in result.output
-        assert "uv run pyignite run" in result.output
+        assert "uv run pyqck run" in result.output
 
         project_dir = Path("my-api")
-        assert (project_dir / "pyignite.toml").exists()
+        assert (project_dir / "pyqck.toml").exists()
         assert (project_dir / "src" / "my_api" / "main.py").exists()
         assert (project_dir / "src" / "my_api" / "api" / "health.py").exists()
         assert (project_dir / "tests" / "test_health.py").exists()
 
-        pyignite_toml = (project_dir / "pyignite.toml").read_text(encoding="utf-8")
-        assert 'app = "my_api.main:app"' in pyignite_toml
+        pyqck_toml = (project_dir / "pyqck.toml").read_text(encoding="utf-8")
+        assert 'app = "my_api.main:app"' in pyqck_toml
 
 
 def test_new_rejects_non_empty_destination() -> None:
