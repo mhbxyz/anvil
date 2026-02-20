@@ -18,7 +18,7 @@ scripts/run_benchmarks.sh
 This command:
 
 1. Generates `benchmarks/current.alpha.json` via runtime measurements.
-2. Compares results against `benchmarks/baseline.alpha.json`.
+2. Compares against `benchmarks/baseline.alpha.json` locally, or `benchmarks/baseline.github-hosted.alpha.json` in GitHub Actions.
 3. Fails if any `p50` or `p95` regression exceeds 30%.
 
 ## Regenerating baseline

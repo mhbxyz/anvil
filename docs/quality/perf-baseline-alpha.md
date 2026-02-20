@@ -2,7 +2,10 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Quality and Performance](README.md)
 
-Baseline artifact: `benchmarks/baseline.alpha.json`
+Baseline artifacts:
+
+- local/dev baseline: `benchmarks/baseline.alpha.json`
+- GitHub-hosted CI baseline: `benchmarks/baseline.github-hosted.alpha.json`
 
 Reference environment from baseline capture:
 
@@ -19,7 +22,9 @@ Reference environment from baseline capture:
   - p50: 582.73 ms
   - p95: 845.76 ms
 
-These values serve as the initial M4 guardrail reference and can be updated with explicit rationale when expected performance changes land.
+These values serve as the M4 guardrail reference and can be updated with explicit rationale when expected performance changes land.
+
+CI note: GitHub-hosted runners have materially higher variance on incremental test feedback timing than local captures. The release preflight selects the CI baseline automatically when running in GitHub Actions.
 
 ## See Also
 
