@@ -35,6 +35,10 @@ Workflow: `.github/workflows/publish.yml`
 - Uploaded artifacts:
   - `dist/*.whl`
   - `dist/*.tar.gz`
+- Optional experimental binary assets from `.github/workflows/binary-experimental.yml`:
+  - `pyqck-<version>-linux-x86_64-experimental`
+  - `pyqck-<version>-linux-x86_64-experimental.tar.gz`
+  - `pyqck-<version>-linux-x86_64-experimental.sha256`
 - Standard migration note block (CLI/config/repo naming).
 
 ## Failure modes

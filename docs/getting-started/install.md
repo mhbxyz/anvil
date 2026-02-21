@@ -8,6 +8,7 @@ Goal: install `pyqck` and verify `pyqck --help` works in your shell.
 
 - **Global CLI (`pipx`)**: best for running `pyqck` from anywhere in your shell `PATH`
 - **Project-local (`venv` + `pip`)**: best when each repository should pin its own tool version
+- **Experimental Linux binary**: best for trying a direct standalone executable from GitHub Releases
 
 ## Option A) Global install with `pipx`
 
@@ -66,6 +67,40 @@ Expected result:
 
 - help output prints successfully
 - `pyqck` resolves from active virtual environment
+
+## Option C) Experimental Linux binary from GitHub Releases
+
+Use this when you want to try the standalone Linux executable build.
+
+### Prerequisites
+
+- Linux x86_64
+- `uv` installed for project environment commands such as `pyqck install` and `pyqck test`
+
+### Download and verify
+
+1. Open the latest release page and download these assets:
+   - `pyqck-<version>-linux-x86_64-experimental`
+   - `pyqck-<version>-linux-x86_64-experimental.sha256`
+2. verify checksum:
+
+```bash
+sha256sum -c pyqck-<version>-linux-x86_64-experimental.sha256
+```
+
+### Run
+
+```bash
+chmod +x pyqck-<version>-linux-x86_64-experimental
+./pyqck-<version>-linux-x86_64-experimental --help
+```
+
+Expected result:
+
+- help output prints successfully
+- no Python installation is required to launch the CLI itself
+
+Note: binary distribution is experimental in alpha; `pipx` remains the primary supported install mode.
 
 ## Upgrade
 

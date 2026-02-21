@@ -56,7 +56,7 @@ Observed outcome:
 
 ## Rollout Proposal
 
-1. Add a dedicated workflow (separate from PyPI publish) to build binary assets.
+1. Add and maintain dedicated workflow `.github/workflows/binary-experimental.yml` (separate from PyPI publish) to build Linux binary assets.
 2. Upload binary artifacts to GitHub Releases with `experimental` label.
 3. Keep existing TestPyPI/PyPI verification workflow as release gate of record.
 4. Re-evaluate Windows support after one milestone of Linux/macOS signal.

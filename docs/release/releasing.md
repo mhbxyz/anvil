@@ -120,7 +120,8 @@ Workflow: `.github/workflows/release-please.yml`
 
 - PyPI remains the primary supported distribution channel in alpha.
 - Standalone binaries are tracked as an experimental path; see [Binary distribution strategy](binary-distribution-strategy.md).
-- If binary artifacts are published, they should be attached to GitHub Releases as optional assets, not as a replacement for package publishing gates.
+- Experimental binaries are produced by `.github/workflows/binary-experimental.yml` (Linux first).
+- If binary artifacts are published, they are attached to GitHub Releases as optional assets, not as a replacement for package publishing gates.
 
 ## See Also
 

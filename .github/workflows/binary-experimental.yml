@@ -1,0 +1,108 @@
+name: binary-experimental
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to build from (e.g. v0.2.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve tag
+        id: meta
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          tag="${INPUT_TAG:-${RELEASE_TAG:-}}"
+          if [ -z "$tag" ]; then
+            echo "Could not resolve release tag"
+            exit 1
+          fi
+          if [[ "$tag" != v* ]]; then
+            echo "Expected a tag starting with v, got: $tag"
+            exit 1
+          fi
+          version="${tag#v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.meta.outputs.tag }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build Linux binary
+        run: |
+          set -euo pipefail
+          uv run --with pyinstaller pyinstaller \
+            --onefile \
+            --name pyqck-linux \
+            --specpath /tmp \
+            src/pyqck/__main__.py \
+            --paths src
+
+      - name: Smoke test Linux binary
+        run: |
+          set -euo pipefail
+          PYQCK_BIN="$PWD/dist/pyqck-linux"
+
+          "$PYQCK_BIN" --help
+
+          mkdir -p .smoke-binary
+          cd .smoke-binary
+
+          "$PYQCK_BIN" new smoke-api --profile api --template fastapi
+          cd smoke-api
+          "$PYQCK_BIN" install
+          "$PYQCK_BIN" test
+
+      - name: Package binary assets
+        run: |
+          set -euo pipefail
+          asset_base="pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental"
+
+          cp dist/pyqck-linux "$asset_base"
+          chmod +x "$asset_base"
+          tar -czf "${asset_base}.tar.gz" "$asset_base"
+          sha256sum "$asset_base" "${asset_base}.tar.gz" > "${asset_base}.sha256"
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-linux-${{ steps.meta.outputs.tag }}
+          path: |
+            pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental
+            pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental.tar.gz
+            pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental.sha256
+
+      - name: Upload binary assets to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.meta.outputs.tag }}"
+          gh release upload "$tag" \
+            "pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental" \
+            "pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental.tar.gz" \
+            "pyqck-${{ steps.meta.outputs.version }}-linux-x86_64-experimental.sha256" \
+            --clobber
