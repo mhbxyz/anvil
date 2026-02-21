@@ -106,6 +106,19 @@ def test_install_propagates_exit_code_with_actionable_error(monkeypatch) -> None
     assert "Hint: Resolve backend errors above, then retry `pyqck install`." in result.output
 
 
+def test_sync_alias_runs_default_args(monkeypatch) -> None:
+    from pyqck.commands import install
+
+    adapters = FakeAdapters(config=_config(), responses=deque([_result(0)]))
+    monkeypatch.setattr(install, "build_adapters_or_exit", lambda: adapters)
+
+    result = CliRunner().invoke(app, ["sync"])
+
+    assert result.exit_code == 0
+    assert adapters.calls == [(ToolKey.PACKAGING, ("sync", "--extra", "dev"))]
+    assert "OK [sync]" in result.output
+
+
 def test_run_uses_defaults_and_passthrough_args(monkeypatch) -> None:
     from pyqck.commands import run
 

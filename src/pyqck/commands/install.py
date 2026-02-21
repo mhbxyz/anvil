@@ -8,6 +8,7 @@ def install_command(ctx: typer.Context) -> None:
     """Sync project dependencies via configured packaging backend."""
 
     adapters = build_adapters_or_exit()
+    command_name = ctx.info_name or "install"
     args = tuple(ctx.args) if ctx.args else ("sync", "--extra", "dev")
 
     try:
@@ -23,7 +24,7 @@ def install_command(ctx: typer.Context) -> None:
         typer.echo(result.stderr, err=True, nl=False)
 
     if result.exit_code == 0:
-        typer.secho("OK [install]", fg=typer.colors.GREEN)
+        typer.secho(f"OK [{command_name}]", fg=typer.colors.GREEN)
         return
 
     typer.secho(
@@ -32,7 +33,7 @@ def install_command(ctx: typer.Context) -> None:
         err=True,
     )
     typer.secho(
-        "Hint: Resolve backend errors above, then retry `pyqck install`.",
+        f"Hint: Resolve backend errors above, then retry `pyqck {command_name}`.",
         fg=typer.colors.YELLOW,
         err=True,
     )

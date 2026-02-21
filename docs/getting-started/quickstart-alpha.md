@@ -44,6 +44,8 @@ Expected result:
 pyqck install
 ```
 
+Alias available: `pyqck sync`.
+
 Expected result:
 
 - virtual environment resolved

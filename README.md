@@ -17,6 +17,7 @@ pyqck run
 ```bash
 pyqck new <name> --profile api --template fastapi
 pyqck install
+pyqck sync
 pyqck dev
 pyqck run
 pyqck test
