@@ -8,7 +8,7 @@ PyQuick is the developer toolchain for Python APIs.
 pipx install pyqck
 pyqck new myapi --profile api --template fastapi
 cd myapi
-uv sync --extra dev
+pyqck install
 pyqck run
 ```
 
@@ -16,6 +16,7 @@ pyqck run
 
 ```bash
 pyqck new <name> --profile api --template fastapi
+pyqck install
 pyqck dev
 pyqck run
 pyqck test

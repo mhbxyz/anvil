@@ -30,7 +30,7 @@ Example:
 
 ```text
 ERROR [tooling] Could not execute `ruff`.
-Hint: Install dependencies with `uv sync --extra dev` and retry.
+Hint: Install dependencies with `pyqck install` and retry.
 ```
 
 ## Command Contract Matrix
@@ -38,6 +38,7 @@ Hint: Install dependencies with `uv sync --extra dev` and retry.
 | Command | Purpose | Inputs (v1) | Success Behavior | Failure Behavior | Idempotence Guarantee |
 | --- | --- | --- | --- | --- | --- |
 | `pyqck new <name> --profile api --template fastapi` | Scaffold a new API project | project name, profile, template | Creates scaffold with deterministic baseline files and returns `0` | Invalid profile/template or filesystem conflict returns `2`; generation failure returns `1` | Running again with same target path does not corrupt existing files and fails predictably unless overwrite is explicit |
+| `pyqck install` | Sync project dependencies via packaging backend | optional passthrough flags (defaults to backend dev sync) | Executes backend sync and returns `0` on success | Invalid config returns `2`; backend/tooling failure returns propagated non-zero exit with actionable diagnostics | Re-running converges to the same environment/lock state for unchanged inputs |
 | `pyqck dev` | Start dev feedback loop | optional config from `pyquick.toml` | Starts watcher/reload loop and exits `0` only on clean user stop | Invalid config returns `2`; watcher/tool process crash returns `1` | Re-running starts the same loop semantics with same config |
 | `pyqck run` | Run app without dev watcher | optional run settings from config | Starts app process via configured defaults, exits with app code (success path `0`) | Invalid run config returns `2`; runner/tool errors return `1` | Re-running uses same launch contract and does not mutate config/project |
 | `pyqck test` | Execute project test suite | optional passthrough flags | Runs configured test command and exits with propagated result | Invalid flags/config returns `2`; test runtime failure returns `1` | No persistent mutation outside normal test artifacts |

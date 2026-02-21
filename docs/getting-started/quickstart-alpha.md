@@ -41,10 +41,8 @@ Expected result:
 ## 2) Install dependencies
 
 ```bash
-uv sync --extra dev
+pyqck install
 ```
-
-Note: a dedicated `pyqck install` wrapper is planned for M5.
 
 Expected result:
 
@@ -94,7 +92,7 @@ Expected result:
 ## Success checklist
 
 - [ ] `pyqck new` generated project successfully
-- [ ] dependencies installed with `uv sync --extra dev`
+- [ ] dependencies installed with `pyqck install`
 - [ ] `/health` returns `{"status": "ok"}`
 - [ ] `pyqck dev` reacts to file changes
 - [ ] `pyqck test` and `pyqck check` pass

@@ -1,6 +1,6 @@
 import typer
 
-from pyqck.commands import check, dev, fmt, lint, new, run, test
+from pyqck.commands import check, dev, fmt, install, lint, new, run, test
 
 
 def register_commands(app: typer.Typer) -> None:
@@ -12,6 +12,7 @@ def register_commands(app: typer.Typer) -> None:
     }
 
     app.command(name="new")(new.new_command)
+    app.command(name="install", context_settings=passthrough_context)(install.install_command)
     app.command(name="dev")(dev.dev_command)
     app.command(name="run", context_settings=passthrough_context)(run.run_command)
     app.command(name="test", context_settings=passthrough_context)(test.test_command)

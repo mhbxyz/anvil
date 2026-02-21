@@ -57,7 +57,7 @@ def new_command(
     )
     typer.echo("Next steps:")
     typer.echo(f"  cd {name}")
-    typer.echo("  uv sync")
+    typer.echo("  pyqck install")
     typer.echo("  pyqck run")
     typer.echo("  pyqck test")
 

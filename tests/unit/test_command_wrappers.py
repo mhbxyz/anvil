@@ -68,6 +68,44 @@ def test_lint_propagates_tool_exit_code(monkeypatch) -> None:
     assert "FAILED [lint] exit code 7" in result.output
 
 
+def test_install_runs_default_args(monkeypatch) -> None:
+    from pyqck.commands import install
+
+    adapters = FakeAdapters(config=_config(), responses=deque([_result(0)]))
+    monkeypatch.setattr(install, "build_adapters_or_exit", lambda: adapters)
+
+    result = CliRunner().invoke(app, ["install"])
+
+    assert result.exit_code == 0
+    assert adapters.calls == [(ToolKey.PACKAGING, ("sync", "--extra", "dev"))]
+    assert "OK [install]" in result.output
+
+
+def test_install_supports_passthrough_args(monkeypatch) -> None:
+    from pyqck.commands import install
+
+    adapters = FakeAdapters(config=_config(), responses=deque([_result(0)]))
+    monkeypatch.setattr(install, "build_adapters_or_exit", lambda: adapters)
+
+    result = CliRunner().invoke(app, ["install", "--frozen"])
+
+    assert result.exit_code == 0
+    assert adapters.calls == [(ToolKey.PACKAGING, ("--frozen",))]
+
+
+def test_install_propagates_exit_code_with_actionable_error(monkeypatch) -> None:
+    from pyqck.commands import install
+
+    adapters = FakeAdapters(config=_config(), responses=deque([_result(4, stderr="sync failed")]))
+    monkeypatch.setattr(install, "build_adapters_or_exit", lambda: adapters)
+
+    result = CliRunner().invoke(app, ["install"])
+
+    assert result.exit_code == 4
+    assert "ERROR [tooling] Dependency sync failed" in result.output
+    assert "Hint: Resolve backend errors above, then retry `pyqck install`." in result.output
+
+
 def test_run_uses_defaults_and_passthrough_args(monkeypatch) -> None:
     from pyqck.commands import run
 

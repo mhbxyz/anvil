@@ -50,7 +50,7 @@ Common causes:
 Fix:
 
 1. ensure `uv --version` works
-2. run `uv sync --extra dev` in project root
+2. run `pyqck install` in project root
 3. verify `[tooling]` values in `pyquick.toml`
 
 ## `pyqck run` fails to boot app

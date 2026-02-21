@@ -23,9 +23,7 @@ def _env_with_repo_src() -> dict[str, str]:
     return env
 
 
-def _run_pyqck(
-    args: list[str], cwd: Path, timeout: int = 120
-) -> subprocess.CompletedProcess[str]:
+def _run_pyqck(args: list[str], cwd: Path, timeout: int = 120) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [sys.executable, "-m", "pyqck", *args],
         cwd=cwd,
@@ -57,14 +55,7 @@ def _free_port() -> int:
 
 def test_e2e_api_workflow_new_run_test_check(tmp_path: Path) -> None:
     project_dir = _create_project(tmp_path, "myapi")
-    sync = subprocess.run(
-        ["uv", "sync", "--extra", "dev"],
-        cwd=project_dir,
-        capture_output=True,
-        text=True,
-        timeout=240,
-        check=False,
-    )
+    sync = _run_pyqck(["install"], cwd=project_dir, timeout=240)
     assert sync.returncode == 0, sync.stdout + sync.stderr
 
     test_result = _run_pyqck(["test"], cwd=project_dir)
