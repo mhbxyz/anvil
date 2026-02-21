@@ -17,8 +17,13 @@ def run_command(ctx: typer.Context) -> None:
     )
     args = default_args + tuple(ctx.args)
 
+    typer.secho(
+        "Starting app process (Ctrl+C to stop)...",
+        fg=typer.colors.CYAN,
+    )
+
     try:
-        result = adapters.run(ToolKey.RUNNING, args=args)
+        result = adapters.run(ToolKey.RUNNING, args=args, live_output=True)
     except ToolError as exc:
         typer.secho(f"ERROR [tooling] {exc.message}", fg=typer.colors.RED, err=True)
         typer.secho(f"Hint: {exc.hint}", fg=typer.colors.YELLOW, err=True)

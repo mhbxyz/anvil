@@ -12,20 +12,29 @@ from pyqck.config import (
     RunSection,
     ToolingSection,
 )
+from pyqck.tooling.adapters import SubprocessRunner
 from pyqck.tooling import ToolAdapters, ToolKey, ToolNotAvailableError
 
 
-class FakeRunner:
+class FakeRunner(SubprocessRunner):
     def __init__(self, return_code: int, stdout: str = "", stderr: str = "") -> None:
         self.return_code = return_code
         self.stdout = stdout
         self.stderr = stderr
         self.last_command: tuple[str, ...] | None = None
         self.last_cwd: Path | None = None
+        self.last_capture_output: bool | None = None
 
-    def run(self, command: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    def run(
+        self,
+        command: Sequence[str],
+        cwd: Path,
+        *,
+        capture_output: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
         self.last_command = tuple(command)
         self.last_cwd = cwd
+        self.last_capture_output = capture_output
         return subprocess.CompletedProcess(
             args=list(command),
             returncode=self.return_code,
@@ -71,6 +80,22 @@ def test_run_propagates_subprocess_exit_and_output(tmp_path: Path) -> None:
     assert result.stderr == "err"
     assert runner.last_command == ("uv", "run", "pytest", "-q")
     assert runner.last_cwd == tmp_path
+    assert runner.last_capture_output is True
+
+
+def test_run_with_live_output_disables_capture(tmp_path: Path) -> None:
+    runner = FakeRunner(return_code=0)
+    adapters = ToolAdapters(
+        config=_config(tmp_path),
+        runner=runner,
+        which=lambda _: "/usr/bin/tool",
+    )
+
+    result = adapters.run(ToolKey.RUNNING, args=("myapi.main:app",), live_output=True)
+
+    assert result.command == ("uv", "run", "uvicorn", "myapi.main:app")
+    assert result.exit_code == 0
+    assert runner.last_capture_output is False
 
 
 def test_tooling_config_controls_executable_name(tmp_path: Path) -> None:

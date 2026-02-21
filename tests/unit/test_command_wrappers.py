@@ -13,9 +13,18 @@ class FakeAdapters:
     config: object
     responses: deque[CommandResult]
     calls: list[tuple[ToolKey, tuple[str, ...]]] = field(default_factory=list)
+    last_live_output: bool | None = None
 
-    def run(self, key: ToolKey, args: tuple[str, ...] = (), cwd: None = None) -> CommandResult:
+    def run(
+        self,
+        key: ToolKey,
+        args: tuple[str, ...] = (),
+        cwd: None = None,
+        *,
+        live_output: bool = False,
+    ) -> CommandResult:
         _ = cwd
+        self.last_live_output = live_output
         self.calls.append((key, tuple(args)))
         return self.responses.popleft()
 
@@ -74,6 +83,7 @@ def test_run_uses_defaults_and_passthrough_args(monkeypatch) -> None:
             ("myapi.main:app", "--host", "127.0.0.1", "--port", "8000", "--reload"),
         )
     ]
+    assert adapters.last_live_output is True
 
 
 def test_run_uses_config_overrides(monkeypatch) -> None:

@@ -45,12 +45,18 @@ class ToolSpec:
 
 
 class SubprocessRunner:
-    def run(self, command: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    def run(
+        self,
+        command: Sequence[str],
+        cwd: Path,
+        *,
+        capture_output: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             list(command),
             cwd=cwd,
             check=False,
-            capture_output=True,
+            capture_output=capture_output,
             text=True,
         )
 
@@ -109,15 +115,26 @@ class ToolAdapters:
             ),
         )
 
-    def run(self, key: ToolKey, args: Sequence[str] = (), cwd: Path | None = None) -> CommandResult:
+    def run(
+        self,
+        key: ToolKey,
+        args: Sequence[str] = (),
+        cwd: Path | None = None,
+        *,
+        live_output: bool = False,
+    ) -> CommandResult:
         command = self.command(key=key, args=args)
-        completed = self._runner.run(command=command, cwd=cwd or self._config.root_dir)
+        completed = self._runner.run(
+            command=command,
+            cwd=cwd or self._config.root_dir,
+            capture_output=not live_output,
+        )
 
         return CommandResult(
             command=tuple(command),
             exit_code=completed.returncode,
-            stdout=completed.stdout,
-            stderr=completed.stderr,
+            stdout=completed.stdout or "",
+            stderr=completed.stderr or "",
         )
 
     def command(self, key: ToolKey, args: Sequence[str] = ()) -> tuple[str, ...]:
