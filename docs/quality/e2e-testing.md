@@ -2,7 +2,7 @@
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [Quality and Performance](README.md)
 
-End-to-end tests validate the core API workflow across command boundaries.
+End-to-end tests validate cross-profile workflows and profile/template validation across command boundaries.
 
 ## Command target
 
@@ -31,6 +31,8 @@ uv run pytest tests/e2e
 - long-running server process is terminated explicitly after startup validation.
 - subprocess calls use explicit timeouts to avoid hangs.
 - assertions focus on deterministic diagnostics (`ERROR [config]`, `ERROR [tooling]`, `Hint:`).
+- CI runs happy-path E2E checks in a profile matrix (`api`, `lib`, `cli`) plus a dedicated failure-path validation suite.
+- package indexing/network variability is isolated away from E2E tests (release install smoke is verified in release workflows).
 
 ## Debug tips
 
@@ -38,6 +40,9 @@ uv run pytest tests/e2e
 
 ```bash
 uv run pytest tests/e2e/test_api_workflow_e2e.py -q
+uv run pytest tests/e2e/test_lib_workflow_e2e.py -q
+uv run pytest tests/e2e/test_cli_workflow_e2e.py -q
+uv run pytest tests/e2e/test_profile_template_validation_e2e.py -q
 ```
 
 - keep stdout/stderr visible:

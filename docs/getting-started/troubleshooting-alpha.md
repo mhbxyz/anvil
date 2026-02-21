@@ -101,7 +101,11 @@ Fix:
 
 1. run on an idle machine/session
 2. rerun with logs: `uv run pytest tests/e2e -s`
-3. use file-level rerun to isolate: `uv run pytest tests/e2e/test_api_workflow_e2e.py -q`
+3. use file-level rerun to isolate one profile/validation suite:
+   - `uv run pytest tests/e2e/test_api_workflow_e2e.py -q`
+   - `uv run pytest tests/e2e/test_lib_workflow_e2e.py -q`
+   - `uv run pytest tests/e2e/test_cli_workflow_e2e.py -q`
+   - `uv run pytest tests/e2e/test_profile_template_validation_e2e.py -q`
 
 ## Still blocked?
 
