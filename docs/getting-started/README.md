@@ -3,4 +3,5 @@
 [Project README](../../README.md) · [Docs Index](../README.md)
 
 - [Alpha quickstart](quickstart-alpha.md)
+- [Install guide](install.md)
 - [Alpha troubleshooting](troubleshooting-alpha.md)

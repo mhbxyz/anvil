@@ -5,6 +5,7 @@ PyQuick is the developer toolchain for Python APIs.
 ## TL;DR
 
 ```bash
+pipx install pyqck
 pyqck new myapi --profile api --template fastapi
 cd myapi
 uv sync --extra dev
@@ -26,6 +27,7 @@ pyqck check
 ## Quick Navigation
 
 - Docs index: [docs/README.md](docs/README.md)
+- Install guide: [docs/getting-started/install.md](docs/getting-started/install.md)
 - Alpha quickstart: [docs/getting-started/quickstart-alpha.md](docs/getting-started/quickstart-alpha.md)
 - Troubleshooting: [docs/getting-started/troubleshooting-alpha.md](docs/getting-started/troubleshooting-alpha.md)
 - Release checklist: [docs/release/release-alpha-checklist.md](docs/release/release-alpha-checklist.md)

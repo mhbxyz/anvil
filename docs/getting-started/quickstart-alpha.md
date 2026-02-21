@@ -4,6 +4,8 @@
 
 Goal: run your first PyQuick API project in under 10 minutes.
 
+Need CLI installation first? Use the [Install guide](install.md).
+
 ## Execution model (important)
 
 PyQuick is a standalone workflow CLI, but dependency/environment execution is delegated to `uv` in alpha.
@@ -104,4 +106,5 @@ Use [Alpha troubleshooting](troubleshooting-alpha.md) for common fixes, then rep
 ## See Also
 
 - [Getting Started index](README.md)
+- [Install guide](install.md)
 - [Release and feedback docs](../release/README.md)
