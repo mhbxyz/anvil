@@ -35,22 +35,27 @@ Expected result:
 - virtual environment created
 - dev tooling installed (`pytest`, `ruff`, `pyright`)
 
-## 3) Run baseline quality flow
+## 3) Run the feedback and quality flow
 
 ```bash
+flint dev
 flint test
 flint check
 ```
 
 Expected result:
 
+- `dev` starts checks-only watch mode for fast feedback
 - baseline library test passes
 - `check` pipeline completes with deterministic status output
+
+Note: `flint run` is not supported for the library profile.
 
 ## Success checklist
 
 - [ ] `flint new --profile lib` generated project successfully
 - [ ] dependencies installed with `flint install`
+- [ ] `flint dev` starts successfully
 - [ ] `flint test` passes
 - [ ] `flint check` passes
 

@@ -4,6 +4,7 @@ from typing import Sequence
 import typer
 
 from flint.config import ConfigError, FlintConfig, load_config
+from flint.scaffold import ProfileCapabilities, ScaffoldLookupError, build_default_scaffold_registry
 from flint.tooling import CommandResult, ToolAdapters, ToolError, ToolKey
 
 
@@ -21,6 +22,17 @@ def build_adapters_or_exit() -> ToolAdapters:
     return ToolAdapters(config=config)
 
 
+def resolve_profile_capabilities_or_exit(config: FlintConfig) -> ProfileCapabilities:
+    registry = build_default_scaffold_registry()
+    try:
+        return registry.capabilities_for(
+            profile=config.project.profile,
+            template=config.project.template,
+        )
+    except ScaffoldLookupError as exc:
+        usage_error(exc.message, exc.hint)
+
+
 def ensure_tool_available_or_exit(adapters: ToolAdapters, key: ToolKey) -> None:
     try:
         adapters.ensure_available(key)
@@ -28,6 +40,12 @@ def ensure_tool_available_or_exit(adapters: ToolAdapters, key: ToolKey) -> None:
         typer.secho(f"ERROR [tooling] {exc.message}", fg=typer.colors.RED, err=True)
         typer.secho(f"Hint: {exc.hint}", fg=typer.colors.YELLOW, err=True)
         raise typer.Exit(code=1) from exc
+
+
+def usage_error(message: str, hint: str) -> None:
+    typer.secho(f"ERROR [usage] {message}", fg=typer.colors.RED, err=True)
+    typer.secho(f"Hint: {hint}", fg=typer.colors.YELLOW, err=True)
+    raise typer.Exit(code=2)
 
 
 def run_tool_or_exit(

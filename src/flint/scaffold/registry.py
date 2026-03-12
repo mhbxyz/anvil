@@ -2,9 +2,28 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from enum import StrEnum
 from pathlib import Path
 
 ScaffoldGenerator = Callable[[str], dict[Path, str]]
+
+
+class RunMode(StrEnum):
+    SERVER = "server"
+    CLI = "cli"
+    UNSUPPORTED = "unsupported"
+
+
+class DevMode(StrEnum):
+    SERVER_WITH_CHECKS = "server_with_checks"
+    CHECKS_ONLY = "checks_only"
+    UNSUPPORTED = "unsupported"
+
+
+@dataclass(slots=True, frozen=True)
+class ProfileCapabilities:
+    run_mode: RunMode
+    dev_mode: DevMode
 
 
 @dataclass(slots=True, frozen=True)
@@ -17,6 +36,7 @@ class ScaffoldSelection:
 @dataclass(slots=True, frozen=True)
 class TemplateRegistration:
     generator: ScaffoldGenerator
+    capabilities: ProfileCapabilities
     is_default: bool = False
 
 
@@ -55,6 +75,14 @@ class IncompatibleTemplateError(ScaffoldLookupError):
         )
 
 
+class UnsupportedProfileCapabilityError(ScaffoldLookupError):
+    def __init__(self, profile: str, template: str) -> None:
+        super().__init__(
+            f"No capability policy configured for profile `{profile}` and template `{template}`.",
+            "Register command capabilities for this profile/template in the scaffold registry.",
+        )
+
+
 class ScaffoldRegistry:
     def __init__(self) -> None:
         self._templates: dict[str, dict[str, TemplateRegistration]] = {}
@@ -66,10 +94,15 @@ class ScaffoldRegistry:
         profile: str,
         template: str,
         generator: ScaffoldGenerator,
+        capabilities: ProfileCapabilities,
         default: bool = False,
     ) -> None:
         profile_templates = self._templates.setdefault(profile, {})
-        profile_templates[template] = TemplateRegistration(generator=generator, is_default=default)
+        profile_templates[template] = TemplateRegistration(
+            generator=generator,
+            capabilities=capabilities,
+            is_default=default,
+        )
         self._reserved_profiles.discard(profile)
 
         if default:
@@ -78,6 +111,7 @@ class ScaffoldRegistry:
                     continue
                 profile_templates[name] = TemplateRegistration(
                     generator=registration.generator,
+                    capabilities=registration.capabilities,
                     is_default=False,
                 )
 
@@ -111,6 +145,31 @@ class ScaffoldRegistry:
 
         files = profile_templates[resolved_template].generator(project_name)
         return ScaffoldSelection(profile=profile, template=resolved_template, files=files)
+
+    def capabilities_for(self, *, profile: str, template: str | None = None) -> ProfileCapabilities:
+        if profile in self._reserved_profiles:
+            raise ReservedProfileError(profile)
+
+        if profile not in self._templates:
+            available_profiles = tuple(sorted((*self._templates.keys(), *self._reserved_profiles)))
+            raise UnknownProfileError(profile, available_profiles=available_profiles)
+
+        resolved_template = template or self._default_template_for(profile)
+        profile_templates = self._templates[profile]
+        if resolved_template not in profile_templates:
+            if self._template_exists_anywhere(resolved_template):
+                raise IncompatibleTemplateError(profile=profile, template=resolved_template)
+            available_templates = tuple(sorted(profile_templates.keys()))
+            raise UnknownTemplateError(
+                resolved_template,
+                profile=profile,
+                available_templates=available_templates,
+            )
+
+        capabilities = profile_templates[resolved_template].capabilities
+        if capabilities is None:
+            raise UnsupportedProfileCapabilityError(profile, resolved_template)
+        return capabilities
 
     def _default_template_for(self, profile: str) -> str:
         for template_name, registration in self._templates[profile].items():

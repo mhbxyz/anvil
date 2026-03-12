@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 from types import SimpleNamespace
 
+from flint.scaffold import DevMode
 from flint.devloop.orchestrator import run_dev_loop
 from flint.tooling import CommandResult, ToolKey
 
@@ -167,3 +168,33 @@ def test_dev_loop_kills_process_if_terminate_times_out(tmp_path: Path) -> None:
     run_dev_loop(adapters, watch_factory=watcher, popen_factory=popen_factory)
 
     assert popen_factory.processes[-1].killed == 1
+
+
+def test_dev_loop_checks_only_runs_feedback_without_process_management(tmp_path: Path) -> None:
+    adapters = FakeAdapters(
+        root_dir=tmp_path,
+        check_results=[_result(0), _result(0), _result(0)],
+    )
+    popen_factory = FakePopenFactory()
+
+    changed_file = tmp_path / "src" / "tool.py"
+    changed_file.parent.mkdir(parents=True, exist_ok=True)
+
+    def watcher(*paths: Path, debounce: int):
+        assert paths == (tmp_path / "src", tmp_path / "tests")
+        assert debounce == 120
+        yield {(object(), str(changed_file))}
+
+    run_dev_loop(
+        adapters,
+        mode=DevMode.CHECKS_ONLY,
+        watch_factory=watcher,
+        popen_factory=popen_factory,
+    )
+
+    assert popen_factory.calls == []
+    assert adapters.run_calls == [
+        (ToolKey.LINTING, ("check", "src/tool.py")),
+        (ToolKey.TYPING, ()),
+        (ToolKey.TESTING, ()),
+    ]

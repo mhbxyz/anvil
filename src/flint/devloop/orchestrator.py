@@ -7,6 +7,7 @@ from typing import Callable, Iterable, Sequence
 
 from watchfiles import watch
 
+from flint.scaffold import DevMode
 from flint.devloop.incremental import resolve_check_plan
 from flint.devloop.renderer import CycleSummary, DevLoopRenderer
 from flint.tooling import ToolAdapters, ToolError, ToolKey
@@ -18,6 +19,7 @@ IGNORED_SUFFIXES = {".pyc", ".pyo", ".swp", ".tmp"}
 def run_dev_loop(
     adapters: ToolAdapters,
     *,
+    mode: DevMode = DevMode.SERVER_WITH_CHECKS,
     watch_factory: Callable[..., Iterable[set[tuple[object, str]]]] = watch,
     popen_factory: Callable[..., subprocess.Popen[bytes]] = subprocess.Popen,
     renderer: DevLoopRenderer | None = None,
@@ -26,22 +28,28 @@ def run_dev_loop(
     renderer = renderer or DevLoopRenderer()
 
     watch_paths = [config.root_dir / relative_path for relative_path in config.dev.watch]
-    running_args = (
-        config.run.app,
-        "--host",
-        config.run.host,
-        "--port",
-        str(config.run.port),
-    )
-    running_command = adapters.command(ToolKey.RUNNING, args=running_args)
 
     renderer.loop_started(config.dev.watch, config.dev.debounce_ms)
-    server_process = _start_server(
-        command=running_command,
-        cwd=config.root_dir,
-        popen_factory=popen_factory,
-        renderer=renderer,
-    )
+    managed_process: subprocess.Popen[bytes] | None = None
+    if mode == DevMode.SERVER_WITH_CHECKS:
+        running_args = (
+            config.run.app,
+            "--host",
+            config.run.host,
+            "--port",
+            str(config.run.port),
+        )
+        running_command = adapters.command(ToolKey.RUNNING, args=running_args)
+        managed_process = _start_server(
+            command=running_command,
+            cwd=config.root_dir,
+            popen_factory=popen_factory,
+            renderer=renderer,
+        )
+    elif mode == DevMode.CHECKS_ONLY:
+        renderer.checks_only_started()
+    else:
+        raise ValueError(f"Unsupported dev mode: {mode}")
 
     cycle_index = 0
     try:
@@ -54,13 +62,15 @@ def run_dev_loop(
             renderer.cycle_started(cycle_index, changed_files)
             started = time.perf_counter()
 
-            _stop_process(server_process)
-            server_process = _start_server(
-                command=running_command,
-                cwd=config.root_dir,
-                popen_factory=popen_factory,
-                renderer=renderer,
-            )
+            if mode == DevMode.SERVER_WITH_CHECKS:
+                assert managed_process is not None
+                _stop_process(managed_process)
+                managed_process = _start_server(
+                    command=running_command,
+                    cwd=config.root_dir,
+                    popen_factory=popen_factory,
+                    renderer=renderer,
+                )
 
             feedback = _run_feedback_checks(
                 adapters, changed_files=changed_files, renderer=renderer
@@ -79,7 +89,8 @@ def run_dev_loop(
     except KeyboardInterrupt:
         renderer.loop_stopped()
     finally:
-        _stop_process(server_process)
+        if managed_process is not None:
+            _stop_process(managed_process)
 
 
 def _start_server(

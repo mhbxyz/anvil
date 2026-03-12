@@ -89,3 +89,17 @@ def test_renderer_failure_snapshot() -> None:
         "ERR:Hint: run `flint lint` for full output.",
         "ERR:Summary #3: failed on lint after 70ms",
     ]
+
+
+def test_renderer_checks_only_snapshot() -> None:
+    sink = Sink()
+    renderer = DevLoopRenderer(secho=sink.secho, echo=sink.echo)
+
+    renderer.loop_started(("src", "tests"), 150)
+    renderer.checks_only_started()
+
+    assert sink.lines == [
+        "OUT:Dev loop started",
+        "OUT:Watching src, tests (debounce 150ms)",
+        "OUT:Checks-only mode: no process launch for this profile",
+    ]

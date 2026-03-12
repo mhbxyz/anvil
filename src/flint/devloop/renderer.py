@@ -40,6 +40,9 @@ class DevLoopRenderer:
     def server_started(self, command: Sequence[str]) -> None:
         self._secho(f"Server up: {' '.join(command)}", fg=typer.colors.GREEN)
 
+    def checks_only_started(self) -> None:
+        self._secho("Checks-only mode: no process launch for this profile", fg=typer.colors.GREEN)
+
     def cycle_started(self, cycle: int, changed_files: Sequence[str]) -> None:
         self._secho(
             f"Cycle #{cycle}: {len(changed_files)} change(s): {', '.join(changed_files[:3])}",

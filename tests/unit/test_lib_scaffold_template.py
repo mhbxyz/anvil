@@ -20,6 +20,7 @@ def test_lib_template_uses_lib_profile_and_default_template() -> None:
     flint_toml = files[Path("flint.toml")]
     assert 'profile = "lib"' in flint_toml
     assert 'template = "baseline-lib"' in flint_toml
+    assert 'running = "python"' in flint_toml
 
 
 def test_lib_template_contains_quality_defaults() -> None:
@@ -39,3 +40,11 @@ def test_lib_template_generates_importable_baseline_test() -> None:
     test_module = files[Path("tests/test_billing_lib.py")]
     assert "from billing_lib import add" in test_module
     assert "assert add(2, 3) == 5" in test_module
+
+
+def test_lib_template_readme_documents_checks_only_dev_and_no_run() -> None:
+    context = LibTemplateContext.from_project_name("billing-lib")
+    readme = build_lib_template(context)[Path("README.md")]
+
+    assert "`flint dev` runs checks-only watch mode" in readme
+    assert "`flint run` is not supported" in readme

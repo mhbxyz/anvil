@@ -5,7 +5,7 @@ from pathlib import Path
 from flint.scaffold.cli_template import CLITemplateContext, build_cli_template
 from flint.scaffold.fastapi import FastAPITemplateContext, build_fastapi_template
 from flint.scaffold.lib_template import LibTemplateContext, build_lib_template
-from flint.scaffold.registry import ScaffoldRegistry
+from flint.scaffold.registry import DevMode, ProfileCapabilities, RunMode, ScaffoldRegistry
 
 
 def build_default_scaffold_registry() -> ScaffoldRegistry:
@@ -14,18 +14,30 @@ def build_default_scaffold_registry() -> ScaffoldRegistry:
         profile="api",
         template="fastapi",
         generator=_build_api_fastapi,
+        capabilities=ProfileCapabilities(
+            run_mode=RunMode.SERVER,
+            dev_mode=DevMode.SERVER_WITH_CHECKS,
+        ),
         default=True,
     )
     registry.register(
         profile="lib",
         template="baseline-lib",
         generator=_build_lib_baseline,
+        capabilities=ProfileCapabilities(
+            run_mode=RunMode.UNSUPPORTED,
+            dev_mode=DevMode.CHECKS_ONLY,
+        ),
         default=True,
     )
     registry.register(
         profile="cli",
         template="baseline-cli",
         generator=_build_cli_baseline,
+        capabilities=ProfileCapabilities(
+            run_mode=RunMode.CLI,
+            dev_mode=DevMode.CHECKS_ONLY,
+        ),
         default=True,
     )
 

@@ -22,6 +22,7 @@ def test_cli_template_uses_cli_profile_and_default_template() -> None:
     assert 'profile = "cli"' in flint_toml
     assert 'template = "baseline-cli"' in flint_toml
     assert 'running = "python"' in flint_toml
+    assert 'flint dev' in files[Path("README.md")]
 
 
 def test_cli_template_contains_script_entrypoint_and_quality_defaults() -> None:
@@ -46,3 +47,11 @@ def test_cli_template_generates_callable_entrypoint_and_test() -> None:
     assert 'print("hello from flint cli profile")' in main_module
     assert "from billing_cli.main import main" in test_module
     assert "assert main() == 0" in test_module
+
+
+def test_cli_template_readme_documents_run_and_checks_only_dev() -> None:
+    context = CLITemplateContext.from_project_name("billing-cli")
+    readme = build_cli_template(context)[Path("README.md")]
+
+    assert "`flint run` executes the CLI entrypoint" in readme
+    assert "`flint dev` runs checks-only watch mode" in readme

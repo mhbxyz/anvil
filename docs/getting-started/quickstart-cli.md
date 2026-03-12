@@ -35,24 +35,27 @@ Expected result:
 - virtual environment created
 - dev tooling installed (`pytest`, `ruff`, `pyright`)
 
-## 3) Run baseline quality flow
+## 3) Run the CLI and quality flow
 
 ```bash
+flint run
+flint dev
 flint test
 flint check
 ```
 
 Expected result:
 
+- `run` executes the generated CLI entrypoint
+- `dev` starts checks-only watch mode for fast feedback
 - baseline CLI test passes
 - `check` pipeline completes with deterministic status output
-
-Note: profile-aware `flint run`/`flint dev` behavior for CLI projects is tracked in issue #34.
 
 ## Success checklist
 
 - [ ] `flint new --profile cli` generated project successfully
 - [ ] dependencies installed with `flint install`
+- [ ] `flint run` executes successfully
 - [ ] `flint test` passes
 - [ ] `flint check` passes
 

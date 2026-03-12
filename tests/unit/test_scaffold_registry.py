@@ -4,7 +4,10 @@ import pytest
 
 from flint.scaffold.catalog import build_default_scaffold_registry
 from flint.scaffold.registry import (
+    DevMode,
     IncompatibleTemplateError,
+    ProfileCapabilities,
+    RunMode,
     ReservedProfileError,
     ScaffoldRegistry,
     UnknownProfileError,
@@ -18,7 +21,13 @@ def _files(project_name: str) -> dict[Path, str]:
 
 def test_registry_resolves_default_template_and_builds_files() -> None:
     registry = ScaffoldRegistry()
-    registry.register(profile="api", template="fastapi", generator=_files, default=True)
+    registry.register(
+        profile="api",
+        template="fastapi",
+        generator=_files,
+        capabilities=ProfileCapabilities(RunMode.SERVER, DevMode.SERVER_WITH_CHECKS),
+        default=True,
+    )
 
     selection = registry.build(project_name="myapi", profile="api")
 
@@ -29,7 +38,13 @@ def test_registry_resolves_default_template_and_builds_files() -> None:
 
 def test_registry_rejects_unknown_profile() -> None:
     registry = ScaffoldRegistry()
-    registry.register(profile="api", template="fastapi", generator=_files, default=True)
+    registry.register(
+        profile="api",
+        template="fastapi",
+        generator=_files,
+        capabilities=ProfileCapabilities(RunMode.SERVER, DevMode.SERVER_WITH_CHECKS),
+        default=True,
+    )
 
     with pytest.raises(UnknownProfileError):
         registry.build(project_name="demo", profile="worker")
@@ -37,7 +52,13 @@ def test_registry_rejects_unknown_profile() -> None:
 
 def test_registry_rejects_unknown_template_for_profile() -> None:
     registry = ScaffoldRegistry()
-    registry.register(profile="api", template="fastapi", generator=_files, default=True)
+    registry.register(
+        profile="api",
+        template="fastapi",
+        generator=_files,
+        capabilities=ProfileCapabilities(RunMode.SERVER, DevMode.SERVER_WITH_CHECKS),
+        default=True,
+    )
 
     with pytest.raises(UnknownTemplateError):
         registry.build(project_name="demo", profile="api", template="flask")
@@ -45,8 +66,20 @@ def test_registry_rejects_unknown_template_for_profile() -> None:
 
 def test_registry_rejects_incompatible_template_pair() -> None:
     registry = ScaffoldRegistry()
-    registry.register(profile="api", template="fastapi", generator=_files, default=True)
-    registry.register(profile="cli", template="baseline-cli", generator=_files, default=True)
+    registry.register(
+        profile="api",
+        template="fastapi",
+        generator=_files,
+        capabilities=ProfileCapabilities(RunMode.SERVER, DevMode.SERVER_WITH_CHECKS),
+        default=True,
+    )
+    registry.register(
+        profile="cli",
+        template="baseline-cli",
+        generator=_files,
+        capabilities=ProfileCapabilities(RunMode.CLI, DevMode.CHECKS_ONLY),
+        default=True,
+    )
 
     with pytest.raises(IncompatibleTemplateError):
         registry.build(project_name="demo", profile="cli", template="fastapi")
@@ -77,3 +110,15 @@ def test_default_registry_marks_web_as_reserved_profile() -> None:
 
     with pytest.raises(ReservedProfileError):
         registry.build(project_name="demo", profile="web")
+
+
+def test_default_registry_exposes_profile_capabilities() -> None:
+    registry = build_default_scaffold_registry()
+
+    api = registry.capabilities_for(profile="api", template="fastapi")
+    cli = registry.capabilities_for(profile="cli", template="baseline-cli")
+    lib = registry.capabilities_for(profile="lib", template="baseline-lib")
+
+    assert api == ProfileCapabilities(RunMode.SERVER, DevMode.SERVER_WITH_CHECKS)
+    assert cli == ProfileCapabilities(RunMode.CLI, DevMode.CHECKS_ONLY)
+    assert lib == ProfileCapabilities(RunMode.UNSUPPORTED, DevMode.CHECKS_ONLY)

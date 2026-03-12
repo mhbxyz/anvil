@@ -4,7 +4,10 @@ from flint.scaffold.fastapi import FastAPITemplateContext, build_fastapi_templat
 from flint.scaffold.lib_template import LibTemplateContext, build_lib_template
 from flint.scaffold.names import normalize_package_name
 from flint.scaffold.registry import (
+    DevMode,
     IncompatibleTemplateError,
+    ProfileCapabilities,
+    RunMode,
     ReservedProfileError,
     ScaffoldLookupError,
     ScaffoldRegistry,
@@ -22,6 +25,9 @@ __all__ = [
     "build_fastapi_template",
     "LibTemplateContext",
     "build_lib_template",
+    "RunMode",
+    "DevMode",
+    "ProfileCapabilities",
     "ScaffoldRegistry",
     "ScaffoldSelection",
     "ScaffoldLookupError",
