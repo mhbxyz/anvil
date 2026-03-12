@@ -32,7 +32,7 @@ uv run pytest tests/e2e
 - subprocess calls use explicit timeouts to avoid hangs.
 - assertions focus on deterministic diagnostics (`ERROR [config]`, `ERROR [tooling]`, `Hint:`).
 - CI runs happy-path E2E checks in a profile matrix (`api`, `lib`, `cli`) plus a dedicated failure-path validation suite.
-- package indexing/network variability is isolated away from E2E tests (release install smoke is verified in release workflows).
+- package indexing/network variability is isolated away from E2E tests.
 
 ## Debug tips
 

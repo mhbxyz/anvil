@@ -33,7 +33,6 @@ flint check
 - Library quickstart: [docs/getting-started/quickstart-lib.md](docs/getting-started/quickstart-lib.md)
 - CLI quickstart: [docs/getting-started/quickstart-cli.md](docs/getting-started/quickstart-cli.md)
 - Troubleshooting: [docs/getting-started/troubleshooting-alpha.md](docs/getting-started/troubleshooting-alpha.md)
-- PyPI publishing: [docs/release/pypi-publishing.md](docs/release/pypi-publishing.md)
 
 ## Docs by Section
 
@@ -41,7 +40,6 @@ flint check
 - Reference: [docs/reference/README.md](docs/reference/README.md)
 - Dev Loop: [docs/dev-loop/README.md](docs/dev-loop/README.md)
 - Quality and Performance: [docs/quality/README.md](docs/quality/README.md)
-- Publishing: [docs/release/README.md](docs/release/README.md)
 - Architecture Decisions: [docs/adr/README.md](docs/adr/README.md)
 
 ## Product Scope (v1 alpha)
@@ -58,7 +56,7 @@ flint check
 2. M2 - FastAPI Scaffold (No DB)
 3. M3 - Dev Loop (Vite-like)
 4. M4 - Quality, Perf, DX Hardening
-5. M5 - Internal Alpha Release
+5. M5 - Internal Alpha Validation
 
 ## License
 

@@ -46,4 +46,3 @@ Flint is a workflow CLI, not an environment/package manager. Project setup and i
 ## See Also
 
 - [ADR index](README.md)
-- [PyPI publishing](../release/pypi-publishing.md)

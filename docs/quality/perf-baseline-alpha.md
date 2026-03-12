@@ -24,7 +24,7 @@ Reference environment from baseline capture:
 
 These values serve as the M4 guardrail reference and can be updated with explicit rationale when expected performance changes land.
 
-CI note: GitHub-hosted runners have materially higher variance on incremental test feedback timing than local captures. The release preflight selects the CI baseline automatically when running in GitHub Actions.
+CI note: GitHub-hosted runners have materially higher variance on incremental test feedback timing than local captures. Use the CI baseline when comparing results captured in GitHub Actions.
 
 ## See Also
 

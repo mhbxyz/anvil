@@ -34,11 +34,6 @@ Use this page as the primary entry point for profile-based Flint docs.
 - Performance benchmarks: [perf-benchmarks.md](quality/perf-benchmarks.md)
 - Alpha performance baseline: [perf-baseline-alpha.md](quality/perf-baseline-alpha.md)
 
-## Publishing
-
-- Section index: [Publishing](release/README.md)
-- PyPI publishing: [pypi-publishing.md](release/pypi-publishing.md)
-
 ## ADR
 
 - Section index: [Architecture Decisions](adr/README.md)

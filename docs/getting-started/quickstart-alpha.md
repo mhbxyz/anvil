@@ -105,4 +105,3 @@ Use [Alpha troubleshooting](troubleshooting-alpha.md) for common fixes, then ope
 
 - [Getting Started index](README.md)
 - [Install guide](install.md)
-- [PyPI publishing docs](../release/README.md)
