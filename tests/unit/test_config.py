@@ -14,7 +14,7 @@ def test_load_config_returns_defaults_when_file_missing(tmp_path: Path) -> None:
 
     assert config.project.profile == "api"
     assert config.project.template == "fastapi"
-    assert config.tooling.packaging == "uv"
+    assert config.tooling.runner == "uv"
     assert config.tooling.linting == "ruff"
     assert config.tooling.testing == "pytest"
     assert config.tooling.typing == "pyright"
@@ -91,7 +91,7 @@ def test_load_config_rejects_old_tooling_keys(tmp_path: Path) -> None:
         tmp_path,
         """
 [tooling]
-uv = "uv"
+packaging = "uv"
 """.strip(),
     )
 

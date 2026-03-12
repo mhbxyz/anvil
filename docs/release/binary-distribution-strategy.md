@@ -38,14 +38,14 @@ FLINT_BIN="$PWD/dist/flint-linux"
 "$FLINT_BIN" --help
 "$FLINT_BIN" new smoke-api --profile api --template fastapi
 cd smoke-api
-"$FLINT_BIN" install
+uv sync --extra dev
 "$FLINT_BIN" test
 ```
 
 Observed outcome:
 
 - `new` created scaffold successfully.
-- `install` completed backend sync with `OK [install]`.
+- `uv sync --extra dev` prepared the project environment successfully.
 - `test` completed with `OK [test]`.
 
 ## Recommendation
@@ -63,7 +63,7 @@ Observed outcome:
 
 ## Risks and Mitigations
 
-- Platform-specific breakage risk -> enforce per-platform smoke checks (`--help`, `new`, `install`, `test`).
+- Platform-specific breakage risk -> enforce per-platform smoke checks (`--help`, `new`, `uv sync --extra dev`, `test`).
 - Artifact size increase -> publish binaries as optional assets, not default install path.
 - Support burden increase -> document alpha support scope clearly in install docs.
 

@@ -8,7 +8,7 @@ Flint is the developer toolchain for Python projects.
 pipx install flint-dev
 flint new myapi --profile api --template fastapi
 cd myapi
-flint install
+uv sync --extra dev
 flint test
 flint check
 ```
@@ -17,8 +17,6 @@ flint check
 
 ```bash
 flint new <name> --profile <api|lib|cli> [--template ...]
-flint install
-flint sync
 flint dev
 flint run
 flint test

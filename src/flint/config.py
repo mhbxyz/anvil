@@ -19,7 +19,7 @@ class ProjectSection:
 
 @dataclass(slots=True, frozen=True)
 class ToolingSection:
-    packaging: str = "uv"
+    runner: str = "uv"
     linting: str = "ruff"
     testing: str = "pytest"
     typing: str = "pyright"
@@ -197,12 +197,12 @@ def _parse_project(raw: dict[str, Any]) -> ProjectSection:
 def _parse_tooling(raw: dict[str, Any]) -> ToolingSection:
     _assert_allowed_keys(
         raw,
-        {"packaging", "linting", "testing", "typing", "running"},
+        {"runner", "linting", "testing", "typing", "running"},
         context="[tooling]",
     )
 
     return ToolingSection(
-        packaging=_read_string(raw, "packaging", default="uv", context="[tooling]"),
+        runner=_read_string(raw, "runner", default="uv", context="[tooling]"),
         linting=_read_string(raw, "linting", default="ruff", context="[tooling]"),
         testing=_read_string(raw, "testing", default="pytest", context="[tooling]"),
         typing=_read_string(raw, "typing", default="pyright", context="[tooling]"),

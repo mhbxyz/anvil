@@ -49,4 +49,4 @@ Use this page as the primary entry point for profile-based Flint docs.
 
 - Section index: [Architecture Decisions](adr/README.md)
 - v1 non-goals: [0001-defer-v1-non-goals.md](adr/0001-defer-v1-non-goals.md)
-- Standalone UX + delegated backend: [0002-standalone-cli-delegated-packaging.md](adr/0002-standalone-cli-delegated-packaging.md)
+- Standalone UX + delegated tool runner: [0002-standalone-cli-delegated-packaging.md](adr/0002-standalone-cli-delegated-packaging.md)

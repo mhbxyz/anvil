@@ -29,7 +29,15 @@ def _free_port() -> int:
 
 def test_e2e_api_workflow_new_run_test_check(tmp_path: Path) -> None:
     project_dir = _create_project(tmp_path, "myapi")
-    sync = run_flint(["install"], cwd=project_dir, timeout=240)
+    sync = subprocess.run(
+        ["uv", "sync", "--extra", "dev"],
+        cwd=project_dir,
+        env=env_with_repo_src(),
+        capture_output=True,
+        text=True,
+        timeout=240,
+        check=False,
+    )
     assert sync.returncode == 0, sync.stdout + sync.stderr
 
     test_result = run_flint(["test"], cwd=project_dir)
@@ -61,7 +69,7 @@ def test_e2e_failure_missing_tool_shows_actionable_hint(tmp_path: Path) -> None:
     config_path = project_dir / "flint.toml"
     content = config_path.read_text(encoding="utf-8")
     config_path.write_text(
-        content.replace('packaging = "uv"', 'packaging = "missing-tool"'), encoding="utf-8"
+        content.replace('runner = "uv"', 'runner = "missing-tool"'), encoding="utf-8"
     )
 
     result = run_flint(["test"], cwd=project_dir)

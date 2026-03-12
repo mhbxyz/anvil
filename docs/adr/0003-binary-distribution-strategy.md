@@ -48,7 +48,7 @@ The team needs a decision for milestone planning: should alpha include binary ar
 Linux prototype was successfully built and smoke-tested (see linked release doc):
 
 - Generated artifact: `dist/flint-linux`.
-- Smoke checks passed: `--help`, `new`, `install`, `test`.
+- Smoke checks passed: `--help`, `new`, `uv sync --extra dev`, `test`.
 - This satisfies issue #23 prototype acceptance for at least one platform.
 
 ## Rollout Recommendation (Go/No-Go)

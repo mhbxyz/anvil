@@ -1,4 +1,4 @@
-# ADR 0002: Standalone CLI, Delegated Packaging Backend
+# ADR 0002: Standalone CLI, Delegated Tool Runner
 
 [Project README](../../README.md) · [Docs Index](../README.md) · [ADR Index](README.md)
 
@@ -9,14 +9,14 @@
 
 ## Context
 
-Flint aims to feel like a standalone product CLI. Current alpha workflows rely on `uv` for environment and package operations (`uv sync`, `uv run`). Without an explicit decision, users can perceive this as contradictory: standalone UX versus delegated runtime execution.
+Flint is a workflow CLI, not an environment/package manager. Project setup and in-environment tool execution rely on `uv`, which already owns dependency resolution, virtual environment management, and command execution.
 
 ## Decision
 
 1. Flint remains a standalone orchestration CLI at product/UX level.
 2. Flint does not become a package manager.
-3. Packaging and environment execution are delegated to a backend, with `uv` as the only official backend during alpha.
-4. `flint install` will be introduced in M5 as a user-facing wrapper over backend sync operations.
+3. Environment and tool execution are delegated to a tool runner, with `uv` as the only official runner during alpha.
+4. Flint does not add wrapper commands for dependency sync/install.
 
 ## Responsibility Boundary
 
@@ -24,7 +24,7 @@ Flint aims to feel like a standalone product CLI. Current alpha workflows rely o
   - command workflows (`new`, `dev`, `run`, `test`, `lint`, `fmt`, `check`)
   - project conventions and defaults
   - diagnostics and actionable errors
-- packaging backend (`uv` in alpha) owns:
+- tool runner (`uv` in alpha) owns:
   - dependency resolution and lock/install behavior
   - virtual environment management
   - command execution inside project environment
@@ -33,18 +33,15 @@ Flint aims to feel like a standalone product CLI. Current alpha workflows rely o
 
 - Positive:
   - clear product boundary and maintainable architecture
-  - easier future backend abstraction without changing user workflows
   - keeps Flint focused on developer experience and orchestration
 - Tradeoff:
-  - alpha docs must explicitly explain why project-local commands route through `uv`
+  - alpha docs must explicitly explain the split between `uv sync --extra dev` and `flint ...`
 
 ## Implementation Notes
 
-- Alpha (now): keep `uv` as required backend and document execution model clearly.
-- M5:
-  - add `flint install` wrapper command
-  - define backend interface (`sync`, `exec_tool`, `doctor`) behind command execution
-  - retain strict determinism and actionable failure diagnostics
+- Alpha (now): keep `uv` as required runner and document execution model clearly.
+- Flint commands assume the project environment has already been prepared with `uv sync --extra dev`.
+- Internal command execution continues to use `uv run <tool>` for deterministic project-local tooling.
 
 ## See Also
 

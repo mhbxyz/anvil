@@ -12,5 +12,5 @@ def test_cli_help_exit_code_zero() -> None:
 
     assert process.returncode == 0
     assert "Flint CLI" in process.stdout
-    assert "install" in process.stdout
-    assert "sync" in process.stdout
+    assert "│ install" not in process.stdout
+    assert "│ sync" not in process.stdout

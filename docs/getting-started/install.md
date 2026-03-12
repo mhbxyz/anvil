@@ -75,7 +75,7 @@ Use this when you want to try the standalone Linux executable build.
 ### Prerequisites
 
 - Linux x86_64
-- `uv` installed for project environment commands such as `flint install` and `flint test`
+- `uv` installed for project environment commands such as `uv sync --extra dev` and `flint test`
 
 ### Download and verify
 

@@ -14,7 +14,15 @@ def test_e2e_cli_workflow_new_install_test_check(tmp_path: Path) -> None:
 
     project_dir = tmp_path / "mycli"
 
-    install = run_flint(["install"], cwd=project_dir, timeout=240)
+    install = subprocess.run(
+        ["uv", "sync", "--extra", "dev"],
+        cwd=project_dir,
+        env=env_with_repo_src(),
+        capture_output=True,
+        text=True,
+        timeout=240,
+        check=False,
+    )
     assert install.returncode == 0, install.stdout + install.stderr
 
     test_result = run_flint(["test"], cwd=project_dir)
@@ -29,7 +37,15 @@ def test_e2e_cli_run_executes_entrypoint(tmp_path: Path) -> None:
     assert create.returncode == 0, create.stdout + create.stderr
     project_dir = tmp_path / "mycli"
 
-    install = run_flint(["install"], cwd=project_dir, timeout=240)
+    install = subprocess.run(
+        ["uv", "sync", "--extra", "dev"],
+        cwd=project_dir,
+        env=env_with_repo_src(),
+        capture_output=True,
+        text=True,
+        timeout=240,
+        check=False,
+    )
     assert install.returncode == 0, install.stdout + install.stderr
 
     result = run_flint(["run"], cwd=project_dir)
@@ -43,7 +59,15 @@ def test_e2e_cli_dev_runs_in_checks_only_mode(tmp_path: Path) -> None:
     assert create.returncode == 0, create.stdout + create.stderr
     project_dir = tmp_path / "mycli"
 
-    install = run_flint(["install"], cwd=project_dir, timeout=240)
+    install = subprocess.run(
+        ["uv", "sync", "--extra", "dev"],
+        cwd=project_dir,
+        env=env_with_repo_src(),
+        capture_output=True,
+        text=True,
+        timeout=240,
+        check=False,
+    )
     assert install.returncode == 0, install.stdout + install.stderr
 
     process = subprocess.Popen(

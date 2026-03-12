@@ -27,7 +27,7 @@ Expected result:
 ## 2) Install dependencies
 
 ```bash
-flint install
+uv sync --extra dev
 ```
 
 Expected result:
@@ -54,7 +54,7 @@ Note: `flint run` is not supported for the library profile.
 ## Success checklist
 
 - [ ] `flint new --profile lib` generated project successfully
-- [ ] dependencies installed with `flint install`
+- [ ] dependencies installed with `uv sync --extra dev`
 - [ ] `flint dev` starts successfully
 - [ ] `flint test` passes
 - [ ] `flint check` passes

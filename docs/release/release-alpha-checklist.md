@@ -8,7 +8,7 @@ Use this checklist to run a repeatable, auditable go/no-go process for internal 
 
 - Target release: Internal Alpha
 - Product scope: profile-based scaffolds (`api`, `lib`, `cli`) with API as the most mature alpha baseline
-- Packaging/runtime model: standalone Flint orchestration with delegated `uv` backend
+- Runtime model: standalone Flint orchestration with delegated `uv` tool runner
 
 ## Go/No-Go Gates
 
@@ -64,7 +64,7 @@ Record rehearsal outcome:
 6. Confirm GitHub release automation details from [GitHub release automation](github-releases.md).
 7. Publish internal announcement including:
    - alpha scope
-   - known constraints (including delegated `uv` backend)
+   - known constraints (including explicit `uv` setup)
    - how to onboard ([API quickstart (baseline)](../getting-started/quickstart-alpha.md))
    - where to report feedback ([issue template](../../.github/ISSUE_TEMPLATE/alpha-feedback.yml) and [Alpha feedback template](alpha-feedback-template.md))
 

@@ -11,7 +11,6 @@ from flint.config import FlintConfig
 
 
 class ToolKey(StrEnum):
-    PACKAGING = "packaging"
     LINTING = "linting"
     TESTING = "testing"
     TYPING = "typing"
@@ -78,7 +77,6 @@ class ToolAdapters:
 
     def spec(self, key: ToolKey) -> ToolSpec:
         executable = {
-            ToolKey.PACKAGING: self._config.tooling.packaging,
             ToolKey.LINTING: self._config.tooling.linting,
             ToolKey.TESTING: self._config.tooling.testing,
             ToolKey.TYPING: self._config.tooling.typing,
@@ -96,21 +94,13 @@ class ToolAdapters:
 
     def ensure_available(self, key: ToolKey) -> ToolSpec:
         spec = self.spec(key)
-        if key == ToolKey.PACKAGING:
-            if self._which(spec.executable):
-                return spec
-            raise ToolNotAvailableError(
-                f"Configured tool for `{key.value}` not found: `{spec.executable}`.",
-                spec.remediation_hint,
-            )
-
-        packaging_executable = self._config.tooling.packaging
-        if self._which(packaging_executable):
+        runner_executable = self._config.tooling.runner
+        if self._which(runner_executable):
             return spec
         raise ToolNotAvailableError(
-            f"Configured runner for `{key.value}` not found: `{packaging_executable}`.",
+            f"Configured runner for `{key.value}` not found: `{runner_executable}`.",
             (
-                f"Install `{packaging_executable}` and retry, or set `[tooling].packaging` "
+                f"Install `{runner_executable}` and retry, or set `[tooling].runner` "
                 "to a valid executable."
             ),
         )
@@ -139,6 +129,4 @@ class ToolAdapters:
 
     def command(self, key: ToolKey, args: Sequence[str] = ()) -> tuple[str, ...]:
         spec = self.ensure_available(key)
-        if key == ToolKey.PACKAGING:
-            return (spec.executable, *args)
-        return (self._config.tooling.packaging, "run", spec.executable, *args)
+        return (self._config.tooling.runner, "run", spec.executable, *args)

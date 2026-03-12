@@ -4,7 +4,7 @@ profile = "api"
 template = "fastapi"
 
 [tooling]
-packaging = "uv"
+runner = "uv"
 linting = "ruff"
 testing = "pytest"
 typing = "pyright"

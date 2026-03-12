@@ -17,7 +17,7 @@ Why this split?
 
 - deterministic tool versions from project lock/env
 - consistent behavior across contributors and CI
-- explicit separation of concerns (`flint` orchestration, `uv` packaging runtime)
+- explicit separation of concerns (`flint` orchestration, `uv` tool runtime)
 
 ## Prerequisites
 
@@ -38,13 +38,11 @@ Expected result:
 - `src/` layout ready
 - `flint.toml` present
 
-## 2) Install dependencies
+## 2) Prepare the project environment
 
 ```bash
-flint install
+uv sync --extra dev
 ```
-
-Alias available: `flint sync`.
 
 Expected result:
 
@@ -94,7 +92,7 @@ Expected result:
 ## Success checklist
 
 - [ ] `flint new` generated project successfully
-- [ ] dependencies installed with `flint install`
+- [ ] project environment prepared with `uv sync --extra dev`
 - [ ] `/health` returns `{"status": "ok"}`
 - [ ] `flint dev` reacts to file changes
 - [ ] `flint test` and `flint check` pass

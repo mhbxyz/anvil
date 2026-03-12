@@ -50,7 +50,7 @@ Common causes:
 Fix:
 
 1. ensure `uv --version` works
-2. run `flint install` (or `flint sync`) in project root
+2. run `uv sync --extra dev` in project root
 3. verify `[tooling]` values in `flint.toml`
 
 ## `flint run` fails to boot app

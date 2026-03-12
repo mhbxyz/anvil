@@ -79,7 +79,7 @@ def new_command(
     )
     typer.echo("Next steps:")
     typer.echo(f"  cd {name}")
-    typer.echo("  flint install")
+    typer.echo("  uv sync --extra dev")
     typer.echo("  flint run")
     typer.echo("  flint test")
 

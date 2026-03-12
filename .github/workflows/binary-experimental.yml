@@ -73,7 +73,7 @@ jobs:
 
           "$FLINT_BIN" new smoke-api --profile api --template fastapi
           cd smoke-api
-          "$FLINT_BIN" install
+          uv sync --extra dev
           "$FLINT_BIN" test
 
       - name: Package binary assets
