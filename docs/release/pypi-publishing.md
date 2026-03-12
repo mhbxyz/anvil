@@ -6,7 +6,7 @@ This guide documents the only supported publishing flow for `flint-dev`: GitHub 
 
 ## Workflows
 
-- Build validation: `.github/workflows/python-package.yml`
+- Build validation: `.github/workflows/ci.yml`
   - runs on PR and `main`
   - builds wheel/sdist via `uv build`
   - smoke-installs built wheel and runs `flint --help`
